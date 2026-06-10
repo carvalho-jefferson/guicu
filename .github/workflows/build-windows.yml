@@ -1,0 +1,38 @@
+name: Build Windows
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar recursos (debug)
+        run: |
+          echo "=== Arquivos em resources/ ==="
+          dir resources || echo "PASTA resources/ NAO ENCONTRADA!"
+          echo "=== electron-builder.yml existe? ==="
+          dir electron-builder.yml || echo "YML NAO ENCONTRADO!"
+
+      - name: Build Windows
+        run: npm run build:win
+
+      - name: Upload ao Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

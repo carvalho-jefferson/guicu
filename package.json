@@ -1,0 +1,60 @@
+{
+  "name": "guicu",
+  "version": "1.0.0",
+  "description": "Guicu: seu currículo guiado. Crie, edite, analise e exporte currículos offline, com total privacidade. Gratuito e open-source.",
+  "keywords": [
+    "curriculo",
+    "ats",
+    "electron",
+    "react",
+    "offline",
+    "pdf",
+    "privacidade",
+    "open-source",
+    "resume",
+    "cv",
+    "ats-friendly"
+  ],
+  "main": "./out/main/index.js",
+  "author": "Jefferson Carvalho - (https://github.com/carvalho-jefferson)",
+  "homepage": "https://github.com/carvalho-jefferson/guicu",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint --cache .",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir --config electron-builder.yml --publish=never",
+    "build:win": "npm run build && electron-builder --win --config electron-builder.yml --publish=never",
+    "build:mac": "npm run build && electron-builder --mac --config electron-builder.yml --publish=never",
+    "build:linux": "npm run build && electron-builder --linux --config electron-builder.yml --publish=never"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "docx": "^9.7.1",
+    "file-saver": "^2.0.5",
+    "react-icons": "^5.6.0"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config": "^2.1.0",
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@vitejs/plugin-react": "^5.1.1",
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^5.0.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "prettier": "^3.7.4",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "vite": "^7.2.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carvalho-jefferson/guicu"
+  }
+}
