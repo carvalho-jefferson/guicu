@@ -11,6 +11,11 @@ files:
 asarUnpack:
   - resources/**
 
+publish:
+  provider: github
+  owner: carvalho-jefferson
+  repo: guicu
+
 win:
   executableName: Guicu
   icon: resources/icon.ico

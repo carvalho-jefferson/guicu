@@ -6,6 +6,7 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { dialog } from 'electron'
+import { autoUpdater } from 'electron-updater'
 
 // Novos caminhos para armazenamento de currículos
 const RESUMES_DIR = join(app.getPath('userData'), 'resumes')
@@ -238,6 +239,9 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+  if (!is.dev) {
+    autoUpdater.checkForUpdatesAndNotify()
+  }
 })
 
 app.on('window-all-closed', () => {

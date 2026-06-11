@@ -1,7 +1,7 @@
 {
   "name": "guicu",
   "version": "1.0.0",
-  "description": "Guicu: seu currículo guiado. Crie, edite, analise e exporte currículos offline, com total privacidade. Gratuito e open-source.",
+  "description": "Guicu: seu currículo guiado. Crie, edite, analise e exporte currículos offline, com total privacidade.",
   "keywords": [
     "curriculo",
     "ats",
@@ -34,6 +34,7 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "docx": "^9.7.1",
+    "electron-updater": "^6.8.9",
     "file-saver": "^2.0.5",
     "react-icons": "^5.6.0"
   },
