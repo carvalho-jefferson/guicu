@@ -146,6 +146,7 @@ function App() {
       setActiveResumeId(result.id)
       setStep(0)
       setShowResume(false)
+      setMaxVisitedStep(0)
     }
   }
 
@@ -341,6 +342,7 @@ function App() {
                   setActiveResumeId(e.target.value)
                   setStep(0)
                   setShowResume(false)
+                  setMaxVisitedStep(0)
                 }}
               >
                 {resumeList.map((r) => (
