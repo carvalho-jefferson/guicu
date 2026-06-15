@@ -76,8 +76,12 @@ function App() {
       const result = await window.resumeAPI.loadResume(activeResumeId)
       if (result.success && result.data) {
         setResumeData(result.data)
+        // Se o currículo já tem dados, libera todas as etapas
+        const hasData = result.data.personal?.name?.trim()
+        setMaxVisitedStep(hasData ? STEPS.length - 1 : 0)
       } else {
         setResumeData(initialData)
+        setMaxVisitedStep(0)
       }
       setLoaded(true)
     }
