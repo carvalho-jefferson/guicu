@@ -22,6 +22,11 @@ export default [
       'react-hooks': eslintPluginReactHooks,
       'react-refresh': eslintPluginReactRefresh
     },
+    languageOptions: {
+      globals: {
+        __APP_VERSION__: 'readonly'
+      }
+    },
     rules: {
       ...eslintPluginReactHooks.configs.recommended.rules,
       ...eslintPluginReactRefresh.configs.vite.rules,

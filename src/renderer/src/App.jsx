@@ -305,7 +305,7 @@ function App() {
       <div className="app-container">
         <header className="app-header">
           <h1>Guicu</h1>
-          <span className="version">v1.0.0</span>
+          <span className="version">v{__APP_VERSION__}</span>
 
           {/* Seletor ou campo de renomeação */}
           {isRenaming ? (
