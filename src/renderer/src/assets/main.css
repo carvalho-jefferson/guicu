@@ -110,6 +110,8 @@ body {
   font-weight: 500;
   cursor: pointer;
   outline: none;
+  width: 200px;
+  min-width: 80px;
 }
 .resume-select option {
   background: var(--primary);

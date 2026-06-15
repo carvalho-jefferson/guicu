@@ -315,7 +315,13 @@ function App() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleConfirmRename()
                 }}
-                style={{ marginLeft: 12, padding: '4px 8px', width: 180 }}
+                style={{
+                  marginLeft: 12,
+                  padding: '4px 8px',
+                  width: 200,
+                  maxWidth: 200,
+                  boxSizing: 'border-box'
+                }}
                 autoFocus
               />
               <button className="btn-new" onClick={handleConfirmRename} title="Confirmar">
@@ -330,6 +336,7 @@ function App() {
               <select
                 className="resume-select"
                 value={activeResumeId || ''}
+                title={resumeList.find((r) => r.id === activeResumeId)?.name || ''}
                 onChange={(e) => {
                   setActiveResumeId(e.target.value)
                   setStep(0)
