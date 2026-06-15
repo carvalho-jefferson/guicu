@@ -47,6 +47,7 @@ function App() {
   const [validationErrors, setValidationErrors] = useState([])
   const [showValidationModal, setShowValidationModal] = useState(false)
   const [maxVisitedStep, setMaxVisitedStep] = useState(0)
+  const [updateAvailable, setUpdateAvailable] = useState(null) // null | string (versão)
 
   // Estados para múltiplos currículos
   const [resumeList, setResumeList] = useState([])
@@ -151,6 +152,17 @@ function App() {
     const timer = setTimeout(() => saveCurrentResume(resumeData), 800)
     return () => clearTimeout(timer)
   }, [resumeData, loaded, saveCurrentResume])
+
+  useEffect(() => {
+    const checkUpdate = async () => {
+      const result = await window.resumeAPI.checkUpdate()
+      if (!result.success) return
+      const latest = result.latestVersion.replace('v', '')
+      const current = __APP_VERSION__
+      if (latest !== current) setUpdateAvailable(result.latestVersion)
+    }
+    checkUpdate()
+  }, [])
 
   // Handlers de gerenciamento de currículos
   const handleCreateNew = async () => {
@@ -386,6 +398,28 @@ function App() {
           >
             {getSaveStatusText()}
           </span>
+
+          {updateAvailable && (
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
+              }}
+              style={{
+                marginLeft: 8,
+                fontSize: 12,
+                background: 'rgba(255,255,255,0.15)',
+                color: 'white',
+                padding: '4px 10px',
+                borderRadius: 10,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              ⬆ Nova versão disponível: {updateAvailable}
+            </a>
+          )}
         </header>
         <div className="app-body">
           <aside className="sidebar">

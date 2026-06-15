@@ -188,6 +188,36 @@ ipcMain.handle('rename-resume', async (_event, { id, name }) => {
   }
 })
 
+// Verificação de atualização via GitHub Releases
+ipcMain.handle('check-update', async () => {
+  try {
+    const https = await import('https')
+    return new Promise((resolve) => {
+      const options = {
+        hostname: 'api.github.com',
+        path: '/repos/carvalho-jefferson/guicu/releases/latest',
+        headers: { 'User-Agent': 'guicu-app' }
+      }
+      https.default
+        .get(options, (res) => {
+          let data = ''
+          res.on('data', (chunk) => (data += chunk))
+          res.on('end', () => {
+            try {
+              const release = JSON.parse(data)
+              resolve({ success: true, latestVersion: release.tag_name })
+            } catch {
+              resolve({ success: false })
+            }
+          })
+        })
+        .on('error', () => resolve({ success: false }))
+    })
+  } catch {
+    return { success: false }
+  }
+})
+
 // Handler para exportar PDF usando a impressão nativa do Electron
 ipcMain.handle('export-pdf', async (event) => {
   const win = BrowserWindow.fromWebContents(event.sender)
