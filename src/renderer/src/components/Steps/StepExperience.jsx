@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FiHelpCircle } from 'react-icons/fi'
+import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
 
 const empty = { company: '', role: '', start: '', end: '', current: false, bullets: [] }
 
@@ -7,6 +7,7 @@ function StepExperience({ data, onChange }) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
   const [bulletInput, setBulletInput] = useState('')
+  const [editingBulletIdx, setEditingBulletIdx] = useState(null)
 
   const handle = (e) => {
     const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -15,12 +16,32 @@ function StepExperience({ data, onChange }) {
 
   const addBullet = () => {
     if (!bulletInput.trim()) return
-    setForm((p) => ({ ...p, bullets: [...(p.bullets || []), bulletInput.trim()] }))
+    if (editingBulletIdx !== null) {
+      // modo edição: substitui o bullet existente
+      const updated = [...(form.bullets || [])]
+      updated[editingBulletIdx] = bulletInput.trim()
+      setForm((p) => ({ ...p, bullets: updated }))
+      setEditingBulletIdx(null)
+    } else {
+      setForm((p) => ({ ...p, bullets: [...(p.bullets || []), bulletInput.trim()] }))
+    }
     setBulletInput('')
   }
 
-  const removeBullet = (i) =>
+  const editBullet = (i) => {
+    setEditingBulletIdx(i)
+    setBulletInput(form.bullets[i])
+  }
+
+  const cancelBulletEdit = () => {
+    setEditingBulletIdx(null)
+    setBulletInput('')
+  }
+
+  const removeBullet = (i) => {
     setForm((p) => ({ ...p, bullets: p.bullets.filter((_, idx) => idx !== i) }))
+    if (editingBulletIdx === i) cancelBulletEdit()
+  }
 
   const save = () => {
     if (!form.company || !form.role) return
@@ -44,6 +65,7 @@ function StepExperience({ data, onChange }) {
     setEditing(null)
     setForm(empty)
     setBulletInput('')
+    setEditingBulletIdx(null)
   }
 
   return (
@@ -138,7 +160,7 @@ function StepExperience({ data, onChange }) {
                 placeholder="Ex.: Desenvolvi APIs REST utilizando Python e Flask para integração com banco de dados PostgreSQL."
               />
               <button className="btn-add" onClick={addBullet}>
-                + Adicionar
+                {editingBulletIdx !== null ? 'Salvar' : '+ Adicionar'}
               </button>
             </div>
             {form.bullets?.length > 0 && (
@@ -147,11 +169,23 @@ function StepExperience({ data, onChange }) {
                   <div key={i} className="bullet-item">
                     <span className="bullet-dot">•</span>
                     <span className="text">{b}</span>
-                    <button className="btn-remove" onClick={() => removeBullet(i)}>
-                      ×
+                    <button className="btn-edit" onClick={() => editBullet(i)} title="Editar">
+                      <FiEdit2 size={12} />
+                    </button>
+                    <button className="btn-remove" onClick={() => removeBullet(i)} title="Remover">
+                      <FiX size={14} />
                     </button>
                   </div>
                 ))}
+                {editingBulletIdx !== null && (
+                  <button
+                    className="btn-secondary"
+                    style={{ marginTop: 4, fontSize: 12 }}
+                    onClick={cancelBulletEdit}
+                  >
+                    Cancelar edição
+                  </button>
+                )}
               </div>
             )}
           </div>
