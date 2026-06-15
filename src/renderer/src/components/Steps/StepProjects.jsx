@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
+import { FiEdit2, FiX } from 'react-icons/fi'
 
 const empty = { name: '', tech: '', link: '', bullets: [], linkDisplay: 'below' }
 

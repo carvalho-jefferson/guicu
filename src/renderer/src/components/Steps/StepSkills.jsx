@@ -3,6 +3,7 @@ import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
 
 function StepSkills({ data, onChange }) {
   const [inputValue, setInputValue] = useState('')
+  const [editingCategory, setEditingCategory] = useState(null)
 
   const addSkill = () => {
     const trimmed = inputValue.trim()
@@ -26,7 +27,13 @@ function StepSkills({ data, onChange }) {
       category: category || ''
     }))
 
-    onChange([...data, ...newSkills])
+    if (editingCategory !== null) {
+      const withoutOld = data.filter((s) => (s.category || 'Geral') !== editingCategory)
+      onChange([...withoutOld, ...newSkills])
+      setEditingCategory(null)
+    } else {
+      onChange([...data, ...newSkills])
+    }
     setInputValue('')
   }
 
@@ -43,8 +50,7 @@ function StepSkills({ data, onChange }) {
     const itemNames = groupItems.map((s) => s.name).join(', ')
     const text = cat === 'Geral' ? itemNames : `${cat}: ${itemNames}`
     setInputValue(text)
-    // Remove todos os itens do grupo
-    onChange(data.filter((s) => (s.category || 'Geral') !== cat))
+    setEditingCategory(cat)
   }
 
   // Remover um grupo inteiro
@@ -117,7 +123,7 @@ function StepSkills({ data, onChange }) {
             placeholder="Ex.: Linguagens: Python, Java, JavaScript, C++"
           />
           <button className="btn-add" onClick={addSkill}>
-            + Adicionar
+            {editingCategory !== null ? 'Salvar' : '+ Adicionar'}
           </button>
         </div>
       </div>
