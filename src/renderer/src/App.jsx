@@ -95,7 +95,10 @@ function App() {
       if (result.success) {
         setResumeList(result.data) // atualiza a lista
         if (result.data.length > 0) {
-          setActiveResumeId(result.data[0].id)
+          const lastId = localStorage.getItem('lastActiveResumeId')
+          const idToOpen =
+            lastId && result.data.find((r) => r.id === lastId) ? lastId : result.data[0].id
+          setActiveResumeId(idToOpen)
         } else {
           const createResult = await window.resumeAPI.createResume()
           if (createResult.success) {
@@ -108,6 +111,13 @@ function App() {
     }
     init()
   }, [loadResumeList])
+
+  // Persiste o último currículo ativo
+  useEffect(() => {
+    if (activeResumeId) {
+      localStorage.setItem('lastActiveResumeId', activeResumeId)
+    }
+  }, [activeResumeId])
 
   // Salvamento automático
   const saveCurrentResume = useCallback(
