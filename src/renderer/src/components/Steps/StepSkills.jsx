@@ -103,8 +103,8 @@ function StepSkills({ data, onChange }) {
     <div className="step">
       <h2>Habilidades Técnicas</h2>
       <p className="step-desc">
-        Adicione habilidades no formato "Categoria: habilidade1, habilidade2". Priorize exatamente
-        as palavras-chave que aparecem na descrição da vaga.
+        Adicione habilidades no formato &quot;Categoria: habilidade1, habilidade2&quot;. Priorize
+        exatamente as palavras-chave que aparecem na descrição da vaga.
       </p>
 
       <div className="form-group" style={{ marginBottom: 12 }}>

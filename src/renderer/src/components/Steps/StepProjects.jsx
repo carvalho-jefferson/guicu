@@ -75,8 +75,8 @@ function StepProjects({ data, onChange }) {
     <div className="step">
       <h2>Projetos</h2>
       <p className="step-desc">
-        Projetos práticos demonstram habilidades técnicas reais. Para o ATS, trate‑os como
-        experiências profissionais.
+        Projetos práticos demonstram habilidades técnicas reais. Ao preencher, trate-os como se
+        fossem experiências profissionais.
       </p>
 
       {data.map((proj, i) => (

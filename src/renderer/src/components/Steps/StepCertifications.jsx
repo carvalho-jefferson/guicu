@@ -29,8 +29,11 @@ function StepCertifications({ data, onChange }) {
 
   return (
     <div className="step">
-      <h2>Certificações</h2>
-      <p className="step-desc">Certificações aumentam a credibilidade no ATS.</p>
+      <h2>Cursos e Certificações</h2>
+      <p className="step-desc">
+        Adicione aqui cursos livres, bootcamps, treinamentos e certificações formais. Eles aumentam
+        a credibilidade no ATS.
+      </p>
 
       {data.map((cert, i) => (
         <div key={i} className="list-item">
@@ -68,21 +71,21 @@ function StepCertifications({ data, onChange }) {
         <h3>{editing !== null ? 'Editar certificação' : 'Nova certificação'}</h3>
         <div className="form-grid">
           <div className="form-group full">
-            <label>Nome da certificação</label>
+            <label>Nome do curso ou certificação</label>
             <input
               name="name"
               value={form.name}
               onChange={handle}
-              placeholder="Ex.: AWS Certified Developer"
+              placeholder="Ex.: AWS Certified Developer, Python para Data Science..."
             />
           </div>
           <div className="form-group">
-            <label>Emissor</label>
+            <label>Instituição / Emissor</label>
             <input
               name="issuer"
               value={form.issuer}
               onChange={handle}
-              placeholder="Ex.: Amazon, Google, Alura..."
+              placeholder="Ex.: Amazon, Google, Alura, Udemy..."
             />
           </div>
           <div className="form-group">

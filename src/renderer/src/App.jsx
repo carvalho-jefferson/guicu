@@ -19,7 +19,7 @@ const STEPS = [
   'Experiência',
   'Projetos',
   'Formação',
-  'Certificações',
+  'Cursos e Certificações',
   'Idiomas'
 ]
 

@@ -111,7 +111,7 @@ function countSkillsInText(skillNames, text) {
 //  Experiência profissional               → 25 pts
 //  Resumo profissional                    → 10 pts
 //  Formação acadêmica                     →  5 pts
-//  Certificações                          →  5 pts
+//  Cursos e Certificações                 →  5 pts
 //  Projetos                               →  3 pts
 //  Total possível                         → 100 pts
 //
@@ -316,15 +316,17 @@ export function calculateATSScore(data) {
     feedback.suggestions.push('Inclua sua formação acadêmica')
   }
 
-  // Certificações (5 pts)
+  // Cursos e Certificações (5 pts)
   if ((data.certifications ?? []).length >= 2) {
     score += 5
-    feedback.good.push(`${data.certifications.length} certificações — credibilidade técnica`)
+    feedback.good.push(`${data.certifications.length} cursos/certificações — credibilidade técnica`)
   } else if ((data.certifications ?? []).length === 1) {
     score += 3
-    feedback.suggestions.push('Adicione mais certificações relevantes (AWS, Google, Microsoft...)')
+    feedback.suggestions.push(
+      'Adicione mais cursos ou certificações relevantes (AWS, Google, Alura, Udemy...)'
+    )
   } else {
-    feedback.suggestions.push('Certificações aumentam a credibilidade — adicione se tiver')
+    feedback.suggestions.push('Cursos e certificações aumentam a credibilidade — adicione se tiver')
   }
 
   // Projetos (3 pts)

@@ -60,8 +60,7 @@ function Resume({ resumeData, onBack }) {
       HeadingLevel,
       AlignmentType,
       UnderlineType,
-      BorderStyle,
-      ShadingType
+      BorderStyle
     } = await import('docx')
     const { saveAs } = await import('file-saver')
 
@@ -259,7 +258,7 @@ function Resume({ resumeData, onBack }) {
 
     // Certificações
     if (certifications.length > 0) {
-      children.push(sectionTitle('CERTIFICAÇÕES'))
+      children.push(sectionTitle('CURSOS E CERTIFICAÇÕES'))
       certifications.forEach((cert) => {
         children.push(
           new Paragraph({
@@ -708,7 +707,7 @@ function Resume({ resumeData, onBack }) {
 
           {certifications.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Certificações</h2>
+              <h2 className="r-section-title">Cursos e Certificações</h2>
               {certifications.map((cert, i) => (
                 <div key={i} className="r-item">
                   <div className="r-item-header">

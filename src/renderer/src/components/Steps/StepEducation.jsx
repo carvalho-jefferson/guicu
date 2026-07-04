@@ -33,7 +33,11 @@ function StepEducation({ data, onChange }) {
   return (
     <div className="step">
       <h2>Formação Acadêmica</h2>
-      <p className="step-desc">Inclua graduação, pós‑graduação ou cursos técnicos relevantes.</p>
+      <p className="step-desc">
+        Use esta seção apenas para graduação, ensino médio, curso técnico formal ou pós‑graduação.
+        Cursos livres, bootcamps e treinamentos devem ser adicionados na etapa &quot;Cursos e
+        Certificações&quot;.
+      </p>
 
       {data.map((edu, i) => (
         <div key={i} className="list-item">
