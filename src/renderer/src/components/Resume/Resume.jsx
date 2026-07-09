@@ -46,7 +46,7 @@ function Resume({ resumeData, onBack }) {
   }, [])
 
   const exportPDF = async () => {
-    const result = await window.resumeAPI.exportPDF()
+    const result = await window.resumeAPI.exportPDF(resumeData)
     if (!result.success && result.error !== 'Salvamento cancelado')
       alert('Erro ao exportar PDF: ' + result.error)
   }

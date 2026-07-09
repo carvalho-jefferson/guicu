@@ -219,14 +219,28 @@ ipcMain.handle('check-update', async () => {
 })
 
 // Handler para exportar PDF usando a impressão nativa do Electron
-ipcMain.handle('export-pdf', async (event) => {
+ipcMain.handle('export-pdf', async (event, resumeData = {}) => {
   const win = BrowserWindow.fromWebContents(event.sender)
   if (!win) return { success: false, error: 'Janela não encontrada' }
+
+  const sanitizeFileNamePart = (value = '') =>
+    String(value)
+      .trim()
+      .replace(/[<>:"/\\|?*]/g, '')
+
+  const normalizeTitle = (value = '') => sanitizeFileNamePart(String(value).split('|')[0])
+
+  const rawName = resumeData?.personal?.name || resumeData?.name || ''
+  const rawTitle = resumeData?.personal?.title || resumeData?.title || ''
+
+  const formattedName = sanitizeFileNamePart(rawName).replace(/\s+/g, '_')
+  const formattedTitle = normalizeTitle(rawTitle)
+  const defaultFileName = [formattedName, formattedTitle].filter(Boolean).join('_') || 'curriculo'
 
   // Abre janela para escolher onde salvar
   const { filePath } = await dialog.showSaveDialog(win, {
     title: 'Salvar currículo como PDF',
-    defaultPath: 'curriculo.pdf',
+    defaultPath: `${defaultFileName}.pdf`,
     filters: [{ name: 'PDF', extensions: ['pdf'] }]
   })
 
