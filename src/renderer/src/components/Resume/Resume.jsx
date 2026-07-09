@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { calculateATSScore } from '../../utils/atsEngine'
+import { getSectionTitles } from '../../i18n/resumeLabels'
 import {
   FiArrowLeft,
   FiDownload,
@@ -18,7 +19,64 @@ function getScoreBand(score) {
   return { label: 'Fraco', color: '#e53e3e', bg: '#fff5f5', border: '#fc8181' }
 }
 
-function Resume({ resumeData, onBack }) {
+// Título de seção clicável: um clique transforma o texto num campo editável
+// Permite personalizar cada seção (ex: traduzir "Certificações" para "CERTIFICATIONS" numa vaga internacional) sem precisar de seletor de idioma
+function EditableSectionTitle({ value, onChange }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(value)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (editing) inputRef.current?.focus()
+  }, [editing])
+
+  const commit = () => {
+    setEditing(false)
+    if (draft.trim() && draft.trim() !== value) onChange(draft)
+    else setDraft(value)
+  }
+
+  if (editing) {
+    return (
+      <input
+        ref={inputRef}
+        className="r-section-title r-section-title-input"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') e.currentTarget.blur()
+          if (e.key === 'Escape') {
+            setDraft(value)
+            setEditing(false)
+          }
+        }}
+        style={{
+          border: 'none',
+          borderBottom: '1.5px dashed #a0aec0',
+          background: 'transparent',
+          font: 'inherit',
+          color: 'inherit',
+          padding: 0,
+          width: '100%',
+          outline: 'none'
+        }}
+      />
+    )
+  }
+
+  return (
+    <h2
+      className="r-section-title r-section-title-editable"
+      onClick={() => setEditing(true)}
+      title="Clique para editar o título desta seção"
+    >
+      {value}
+    </h2>
+  )
+}
+
+function Resume({ resumeData, onBack, onUpdate }) {
   const {
     personal,
     summary,
@@ -31,6 +89,15 @@ function Resume({ resumeData, onBack }) {
     font
   } = resumeData
   const [selectedFont, setSelectedFont] = useState(font || 'Calibri')
+  // Títulos de seção editáveis
+  const [sectionTitles, setSectionTitles] = useState(getSectionTitles(resumeData.sectionTitles))
+  const updateSectionTitle = (key, value) => {
+    setSectionTitles((prev) => {
+      const next = { ...prev, [key]: value.trim() || prev[key] }
+      onUpdate?.('sectionTitles', next)
+      return next
+    })
+  }
   const { score, feedback } = useMemo(() => calculateATSScore(resumeData), [resumeData])
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -46,12 +113,14 @@ function Resume({ resumeData, onBack }) {
   }, [])
 
   const exportPDF = async () => {
+    document.activeElement?.blur()
     const result = await window.resumeAPI.exportPDF(resumeData)
     if (!result.success && result.error !== 'Salvamento cancelado')
       alert('Erro ao exportar PDF: ' + result.error)
   }
 
   const exportDOCX = async () => {
+    document.activeElement?.blur()
     const {
       Document,
       Packer,
@@ -156,7 +225,7 @@ function Resume({ resumeData, onBack }) {
 
     // Resumo
     if (clean(summary)) {
-      children.push(sectionTitle('RESUMO PROFISSIONAL'))
+      children.push(sectionTitle(sectionTitles.summary.toUpperCase()))
       children.push(
         new Paragraph({
           children: [new TextRun({ text: summary, size: 22, color: MUTED })],
@@ -167,7 +236,7 @@ function Resume({ resumeData, onBack }) {
 
     // Habilidades
     if (skills.length > 0) {
-      children.push(sectionTitle('HABILIDADES TÉCNICAS'))
+      children.push(sectionTitle(sectionTitles.skills.toUpperCase()))
       const grouped = skills.reduce((acc, s) => {
         const cat = (typeof s === 'string' ? '' : s.category) || 'Geral'
         const n = typeof s === 'string' ? s : s.name
@@ -192,7 +261,7 @@ function Resume({ resumeData, onBack }) {
 
     // Experiência
     if (experience.length > 0) {
-      children.push(sectionTitle('EXPERIÊNCIA PROFISSIONAL'))
+      children.push(sectionTitle(sectionTitles.experience.toUpperCase()))
       experience.forEach((exp) => {
         children.push(
           new Paragraph({
@@ -224,7 +293,7 @@ function Resume({ resumeData, onBack }) {
 
     // Projetos
     if (projects.length > 0) {
-      children.push(sectionTitle('PROJETOS'))
+      children.push(sectionTitle(sectionTitles.projects.toUpperCase()))
       projects.forEach((proj) => {
         const hasLink = clean(proj.link)
         const nameAsLink = hasLink && proj.linkDisplay === 'hyperlink'
@@ -267,7 +336,7 @@ function Resume({ resumeData, onBack }) {
 
     // Formação
     if (education.length > 0) {
-      children.push(sectionTitle('FORMAÇÃO ACADÊMICA'))
+      children.push(sectionTitle(sectionTitles.education.toUpperCase()))
       education.forEach((edu) => {
         const degree = clean(edu.degree)
         const field = clean(edu.field)
@@ -295,7 +364,7 @@ function Resume({ resumeData, onBack }) {
 
     // Certificações
     if (certifications.length > 0) {
-      children.push(sectionTitle('CURSOS E CERTIFICAÇÕES'))
+      children.push(sectionTitle(sectionTitles.certifications.toUpperCase()))
       certifications.forEach((cert) => {
         children.push(
           new Paragraph({
@@ -316,7 +385,7 @@ function Resume({ resumeData, onBack }) {
 
     // Idiomas
     if (languages.length > 0) {
-      children.push(sectionTitle('IDIOMAS'))
+      children.push(sectionTitle(sectionTitles.languages.toUpperCase()))
       children.push(
         new Paragraph({
           children: languages.map(
@@ -614,14 +683,20 @@ function Resume({ resumeData, onBack }) {
 
           {summary && (
             <div className="r-section">
-              <h2 className="r-section-title">Resumo Profissional</h2>
+              <EditableSectionTitle
+                value={sectionTitles.summary}
+                onChange={(v) => updateSectionTitle('summary', v)}
+              />
               <p className="r-desc">{summary}</p>
             </div>
           )}
 
           {skills.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Habilidades Técnicas</h2>
+              <EditableSectionTitle
+                value={sectionTitles.skills}
+                onChange={(v) => updateSectionTitle('skills', v)}
+              />
               {hasCategories ? (
                 Object.entries(groupedSkills).map(([cat, items]) => (
                   <p
@@ -650,7 +725,10 @@ function Resume({ resumeData, onBack }) {
 
           {experience.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Experiência Profissional</h2>
+              <EditableSectionTitle
+                value={sectionTitles.experience}
+                onChange={(v) => updateSectionTitle('experience', v)}
+              />
               {experience.map((exp, i) => (
                 <div key={i} className="r-item">
                   <div className="r-item-header">
@@ -676,7 +754,10 @@ function Resume({ resumeData, onBack }) {
 
           {projects.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Projetos</h2>
+              <EditableSectionTitle
+                value={sectionTitles.projects}
+                onChange={(v) => updateSectionTitle('projects', v)}
+              />
               {projects.map((proj, i) => (
                 <div key={i} className="r-item">
                   <div
@@ -725,7 +806,10 @@ function Resume({ resumeData, onBack }) {
 
           {education.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Formação Acadêmica</h2>
+              <EditableSectionTitle
+                value={sectionTitles.education}
+                onChange={(v) => updateSectionTitle('education', v)}
+              />
               {education.map((edu, i) => (
                 <div key={i} className="r-item">
                   <div className="r-item-header">
@@ -750,7 +834,10 @@ function Resume({ resumeData, onBack }) {
 
           {certifications.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Cursos e Certificações</h2>
+              <EditableSectionTitle
+                value={sectionTitles.certifications}
+                onChange={(v) => updateSectionTitle('certifications', v)}
+              />
               {certifications.map((cert, i) => (
                 <div key={i} className="r-item">
                   <div className="r-item-header">
@@ -790,7 +877,10 @@ function Resume({ resumeData, onBack }) {
 
           {languages.length > 0 && (
             <div className="r-section">
-              <h2 className="r-section-title">Idiomas</h2>
+              <EditableSectionTitle
+                value={sectionTitles.languages}
+                onChange={(v) => updateSectionTitle('languages', v)}
+              />
               <div className="r-skills-plain">
                 {languages.map((l, i) => (
                   <span key={i} className="r-skill">
