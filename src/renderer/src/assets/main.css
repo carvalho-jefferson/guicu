@@ -673,6 +673,14 @@ body {
   margin-bottom: 8px;
   font-weight: 700;
 }
+/* Indica que o título da seção pode ser clicado para editar (ver EditableSectionTitle) */
+.r-section-title-editable {
+  cursor: pointer;
+}
+.r-section-title-editable:hover {
+  border-bottom-style: dashed;
+  border-bottom-color: #a0aec0;
+}
 .r-item {
   margin-bottom: 10px;
 }

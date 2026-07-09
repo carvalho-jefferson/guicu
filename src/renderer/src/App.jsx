@@ -9,6 +9,7 @@ import StepEducation from './components/Steps/StepEducation'
 import StepCertifications from './components/Steps/StepCertifications'
 import StepLanguages from './components/Steps/StepLanguages'
 import Resume from './components/Resume/Resume'
+import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
 import './assets/main.css'
 import {
   FiArrowLeft,
@@ -41,7 +42,8 @@ const initialData = {
   education: [],
   certifications: [],
   languages: [],
-  font: 'Calibri'
+  font: 'Calibri',
+  sectionTitles: { ...DEFAULT_SECTION_TITLES }
 }
 
 function App() {
@@ -294,7 +296,7 @@ function App() {
   }
 
   if (!loaded) return <div className="loading-screen">Carregando...</div>
-  if (showResume) return <Resume resumeData={resumeData} onBack={back} />
+  if (showResume) return <Resume resumeData={resumeData} onBack={back} onUpdate={updateData} />
 
   const steps = [
     <StepPersonal
