@@ -57,28 +57,56 @@ function Resume({ resumeData, onBack }) {
       Packer,
       Paragraph,
       TextRun,
+      ExternalHyperlink,
       HeadingLevel,
       AlignmentType,
-      UnderlineType,
-      BorderStyle
+      BorderStyle,
+      convertInchesToTwip
     } = await import('docx')
     const { saveAs } = await import('file-saver')
 
     const DARK = '1a1a2e'
+    const MUTED = '4a5568'
+    const LIGHT = '718096'
+    const LINK = '2b6cb0'
+
+    // Remove espaços nas pontas de forma segura
+    const clean = (v) => (typeof v === 'string' ? v.trim() : v)
+
+    // Garante que links funcionem como hyperlink mesmo sem "https://" na frente
+    const withProtocol = (url) => {
+      if (!url) return ''
+      if (/^https?:\/\//i.test(url) || /^mailto:/i.test(url)) return url
+      return `https://${url}`
+    }
 
     const sectionTitle = (text) =>
       new Paragraph({
         text,
         heading: HeadingLevel.HEADING_2,
-        spacing: { before: 240, after: 80 },
+        spacing: { before: 260, after: 100 },
         border: { bottom: { color: DARK, size: 6, style: BorderStyle.SINGLE } }
       })
 
     const bullet = (text) =>
       new Paragraph({
         bullet: { level: 0 },
-        children: [new TextRun({ text, size: 22, color: '4a5568' })],
+        children: [new TextRun({ text, size: 22, color: MUTED })],
         spacing: { after: 40 }
+      })
+
+    // Cria um TextRun clicável (hyperlink real do Word)
+    const link = (text, url, opts = {}) =>
+      new ExternalHyperlink({
+        link: withProtocol(url),
+        children: [
+          new TextRun({
+            text,
+            size: opts.size || 22,
+            color: opts.color || LINK,
+            underline: {}
+          })
+        ]
       })
 
     const children = []
@@ -92,44 +120,46 @@ function Resume({ resumeData, onBack }) {
       })
     )
 
-    if (personal.title) {
+    if (clean(personal.title)) {
       children.push(
         new Paragraph({
-          children: [new TextRun({ text: personal.title, size: 26, color: '4a5568' })],
+          children: [new TextRun({ text: personal.title, size: 26, color: MUTED })],
           spacing: { after: 60 }
         })
       )
     }
 
+    // Linha de contatos: email, linkedin e github com hyperlinks reais
     const contacts = [
-      personal.location,
-      personal.phone,
-      personal.email,
-      personal.linkedin,
-      personal.github
+      personal.location && { text: personal.location },
+      personal.phone && { text: personal.phone },
+      personal.email && { text: personal.email, url: `mailto:${personal.email}` },
+      personal.linkedin && { text: personal.linkedin, url: personal.linkedin },
+      personal.github && { text: personal.github, url: personal.github }
     ].filter(Boolean)
+
     if (contacts.length > 0) {
       children.push(
         new Paragraph({
-          children: contacts.map(
-            (c, i) =>
-              new TextRun({
-                text: i < contacts.length - 1 ? `${c}  |  ` : c,
-                size: 20,
-                color: '718096'
-              })
-          ),
+          children: contacts.flatMap((c, i) => [
+            c.url
+              ? link(c.text, c.url, { size: 20, color: LIGHT })
+              : new TextRun({ text: c.text, size: 20, color: LIGHT }),
+            ...(i < contacts.length - 1
+              ? [new TextRun({ text: '   |   ', size: 20, color: LIGHT })]
+              : [])
+          ]),
           spacing: { after: 120 }
         })
       )
     }
 
     // Resumo
-    if (summary) {
+    if (clean(summary)) {
       children.push(sectionTitle('RESUMO PROFISSIONAL'))
       children.push(
         new Paragraph({
-          children: [new TextRun({ text: summary, size: 22, color: '4a5568' })],
+          children: [new TextRun({ text: summary, size: 22, color: MUTED })],
           spacing: { after: 120 }
         })
       )
@@ -152,7 +182,7 @@ function Resume({ resumeData, onBack }) {
               ...(cat !== 'Geral'
                 ? [new TextRun({ text: `${cat}: `, bold: true, size: 22, color: '2d3748' })]
                 : []),
-              new TextRun({ text: items.join(', '), size: 22, color: '4a5568' })
+              new TextRun({ text: items.join(', '), size: 22, color: MUTED })
             ],
             spacing: { after: 60 }
           })
@@ -167,22 +197,24 @@ function Resume({ resumeData, onBack }) {
         children.push(
           new Paragraph({
             children: [
-              new TextRun({ text: exp.role, bold: true, size: 24, color: DARK }),
-              new TextRun({ text: `  -  ${exp.company}`, size: 22, color: '4a5568' }),
+              new TextRun({ text: exp.role || '', bold: true, size: 24, color: DARK }),
+              ...(clean(exp.company)
+                ? [new TextRun({ text: `  -  ${exp.company}`, size: 22, color: MUTED })]
+                : []),
               new TextRun({
-                text: `   ${exp.start} – ${exp.current ? 'Atual' : exp.end}`,
+                text: `   ${exp.start || ''} – ${exp.current ? 'Atual' : exp.end || ''}`,
                 size: 20,
-                color: '718096'
+                color: LIGHT
               })
             ],
             spacing: { after: 60 }
           })
         )
         if (exp.bullets?.length > 0) exp.bullets.forEach((b) => children.push(bullet(b)))
-        else if (exp.description)
+        else if (clean(exp.description))
           children.push(
             new Paragraph({
-              children: [new TextRun({ text: exp.description, size: 22, color: '4a5568' })],
+              children: [new TextRun({ text: exp.description, size: 22, color: MUTED })],
               spacing: { after: 80 }
             })
           )
@@ -194,39 +226,42 @@ function Resume({ resumeData, onBack }) {
     if (projects.length > 0) {
       children.push(sectionTitle('PROJETOS'))
       projects.forEach((proj) => {
+        const hasLink = clean(proj.link)
+        const nameAsLink = hasLink && proj.linkDisplay === 'hyperlink'
+
         children.push(
           new Paragraph({
             children: [
-              new TextRun({ text: proj.name, bold: true, size: 24, color: DARK }),
-              ...(proj.tech
-                ? [new TextRun({ text: `  -  ${proj.tech}`, size: 20, color: '718096' })]
+              nameAsLink
+                ? link(proj.name || '', proj.link, { size: 24, color: DARK })
+                : new TextRun({ text: proj.name || '', bold: true, size: 24, color: DARK }),
+              ...(clean(proj.tech)
+                ? [new TextRun({ text: `  -  ${proj.tech}`, size: 20, color: LIGHT })]
                 : [])
             ],
             spacing: { after: 40 }
           })
         )
-        if (proj.bullets?.length > 0) proj.bullets.forEach((b) => children.push(bullet(b)))
-        else if (proj.description)
+
+        // Link exibido como linha própria (quando não está embutido no título)
+        if (hasLink && proj.linkDisplay !== 'hyperlink') {
           children.push(
             new Paragraph({
-              children: [new TextRun({ text: proj.description, size: 22, color: '4a5568' })],
+              children: [link(proj.link, proj.link, { size: 20, color: LINK })],
+              spacing: { after: 60 }
+            })
+          )
+        }
+
+        if (proj.bullets?.length > 0) proj.bullets.forEach((b) => children.push(bullet(b)))
+        else if (clean(proj.description))
+          children.push(
+            new Paragraph({
+              children: [new TextRun({ text: proj.description, size: 22, color: MUTED })],
               spacing: { after: 40 }
             })
           )
-        if (proj.link)
-          children.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: proj.link,
-                  size: 20,
-                  color: '2b6cb0',
-                  underline: { type: UnderlineType.SINGLE }
-                })
-              ],
-              spacing: { after: 80 }
-            })
-          )
+        children.push(new Paragraph({ text: '', spacing: { after: 40 } }))
       })
     }
 
@@ -234,20 +269,22 @@ function Resume({ resumeData, onBack }) {
     if (education.length > 0) {
       children.push(sectionTitle('FORMAÇÃO ACADÊMICA'))
       education.forEach((edu) => {
+        const degree = clean(edu.degree)
+        const field = clean(edu.field)
+        // Só usa o conector "em" quando grau E curso existem; caso contrário, mostra apenas o que foi preenchido (corrige o bug "em [curso]" sem o grau)
+        const degreeField = degree && field ? `${degree} em ${field}` : degree || field || ''
+
         children.push(
           new Paragraph({
             children: [
+              new TextRun({ text: degreeField, bold: true, size: 24, color: DARK }),
+              ...(clean(edu.institution)
+                ? [new TextRun({ text: `  -  ${edu.institution}`, size: 22, color: MUTED })]
+                : []),
               new TextRun({
-                text: `${edu.degree || ''}${edu.field ? ` em ${edu.field}` : ''}`,
-                bold: true,
-                size: 24,
-                color: DARK
-              }),
-              new TextRun({ text: `  -  ${edu.institution}`, size: 22, color: '4a5568' }),
-              new TextRun({
-                text: `   ${edu.start} – ${edu.current ? 'Cursando' : edu.end}`,
+                text: `   ${edu.start || ''} – ${edu.current ? 'Cursando' : edu.end || ''}`,
                 size: 20,
-                color: '718096'
+                color: LIGHT
               })
             ],
             spacing: { after: 80 }
@@ -263,12 +300,12 @@ function Resume({ resumeData, onBack }) {
         children.push(
           new Paragraph({
             children: [
-              new TextRun({ text: cert.name, bold: true, size: 24, color: DARK }),
-              ...(cert.issuer
-                ? [new TextRun({ text: `  -  ${cert.issuer}`, size: 22, color: '4a5568' })]
+              new TextRun({ text: cert.name || '', bold: true, size: 24, color: DARK }),
+              ...(clean(cert.issuer)
+                ? [new TextRun({ text: `  -  ${cert.issuer}`, size: 22, color: MUTED })]
                 : []),
-              ...(cert.date
-                ? [new TextRun({ text: `  (${cert.date})`, size: 20, color: '718096' })]
+              ...(clean(cert.date)
+                ? [new TextRun({ text: `  (${cert.date})`, size: 20, color: LIGHT })]
                 : [])
             ],
             spacing: { after: 60 }
@@ -290,7 +327,7 @@ function Resume({ resumeData, onBack }) {
                     ? `${l.language} (${l.level})  |  `
                     : `${l.language} (${l.level})`,
                 size: 22,
-                color: '4a5568'
+                color: MUTED
               })
           ),
           spacing: { after: 80 }
@@ -300,6 +337,7 @@ function Resume({ resumeData, onBack }) {
 
     const doc = new Document({
       creator: 'Guicu',
+      title: personal.name || 'Currículo',
       description: 'Currículo otimizado para ATS',
       styles: {
         default: {
@@ -313,7 +351,12 @@ function Resume({ resumeData, onBack }) {
         {
           properties: {
             page: {
-              margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 }
+              margin: {
+                top: convertInchesToTwip(1),
+                bottom: convertInchesToTwip(1),
+                left: convertInchesToTwip(1),
+                right: convertInchesToTwip(1)
+              }
             }
           },
           children
