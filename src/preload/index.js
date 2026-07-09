@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld('resumeAPI', {
   // Renomear um currículo
   renameResume: (payload) => ipcRenderer.invoke('rename-resume', payload),
 
-  exportPDF: () => ipcRenderer.invoke('export-pdf'),
+  exportPDF: (payload) => ipcRenderer.invoke('export-pdf', payload),
 
   checkUpdate: () => ipcRenderer.invoke('check-update')
 })
