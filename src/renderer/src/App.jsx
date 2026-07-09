@@ -10,7 +10,16 @@ import StepCertifications from './components/Steps/StepCertifications'
 import StepLanguages from './components/Steps/StepLanguages'
 import Resume from './components/Resume/Resume'
 import './assets/main.css'
-import { FiArrowLeft, FiArrowRight, FiEdit2, FiTrash2, FiPlus, FiCheck, FiX } from 'react-icons/fi'
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiArrowUp,
+  FiEdit2,
+  FiTrash2,
+  FiPlus,
+  FiCheck,
+  FiX
+} from 'react-icons/fi'
 
 const STEPS = [
   'Dados Pessoais',
@@ -417,7 +426,7 @@ function App() {
                 whiteSpace: 'nowrap'
               }}
             >
-              ⬆ Nova versão disponível: {updateAvailable}
+              <FiArrowUp /> Nova versão disponível: {updateAvailable}
             </a>
           )}
         </header>
