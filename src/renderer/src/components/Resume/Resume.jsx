@@ -75,9 +75,9 @@ function Resume({ resumeData, onBack }) {
 
     // Garante que links funcionem como hyperlink mesmo sem "https://" na frente
     const withProtocol = (url) => {
-      if (!url) return ''
-      if (/^https?:\/\//i.test(url) || /^mailto:/i.test(url)) return url
-      return `https://${url}`
+      const u = clean(url || '')
+      if (!u) return ''
+      return /^https?:\/\//i.test(u) || /^mailto:/i.test(u) ? u : `https://${u}`
     }
 
     const sectionTitle = (text) =>
