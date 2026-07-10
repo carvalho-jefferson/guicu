@@ -1,7 +1,22 @@
 import { FiHelpCircle } from 'react-icons/fi'
 
+const FIELD_FILTERS = {
+  name: (value) => value.replace(/[^\p{L}\s'-]/gu, ''),
+  title: (value) => value, // sem restrição no momento
+  location: (value) => value.replace(/[^\p{L}\p{N}\s,-]/gu, ''),
+  email: (value) => value.replace(/\s/g, ''),
+  phone: (value) => value.replace(/[^0-9+\-\s()]/g, ''),
+  linkedin: (value) => value.replace(/\s/g, ''),
+  github: (value) => value.replace(/\s/g, '')
+}
+
 function StepPersonal({ data, onChange }) {
-  const handle = (e) => onChange({ ...data, [e.target.name]: e.target.value })
+  const handle = (e) => {
+    const { name, value } = e.target
+    const filter = FIELD_FILTERS[name] || ((v) => v)
+    onChange({ ...data, [name]: filter(value) })
+  }
+
   return (
     <div className="step">
       <h2>Dados Pessoais</h2>
@@ -78,4 +93,5 @@ function StepPersonal({ data, onChange }) {
     </div>
   )
 }
+
 export default StepPersonal
