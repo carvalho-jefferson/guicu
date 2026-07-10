@@ -19,7 +19,8 @@ import {
   FiTrash2,
   FiPlus,
   FiCheck,
-  FiX
+  FiX,
+  FiCopy
 } from 'react-icons/fi'
 
 const STEPS = [
@@ -230,6 +231,20 @@ function App() {
     setShowResume(false)
   }
 
+  const handleDuplicate = async () => {
+    if (!activeResumeId) return
+    const result = await window.resumeAPI.duplicateResume(activeResumeId)
+    if (result.success) {
+      await loadResumeList()
+      setActiveResumeId(result.id)
+      setStep(0)
+      setShowResume(false)
+      setMaxVisitedStep(0)
+    } else {
+      console.error('Erro ao duplicar:', result.error)
+    }
+  }
+
   const updateData = (section, value) => {
     setResumeData((prev) => ({ ...prev, [section]: value }))
     setValidationErrors([]) // some com os erros
@@ -392,16 +407,22 @@ function App() {
                 <FiEdit2 size={14} style={{ marginRight: 4 }} />
                 Renomear
               </button>
+
               <button className="btn-new" onClick={handleDelete} title="Excluir currículo">
                 <FiTrash2 size={14} style={{ marginRight: 4 }} />
                 Excluir
               </button>
+              <button className="btn-new" onClick={handleDuplicate} title="Duplicar currículo">
+                <FiCopy size={14} style={{ marginRight: 4 }} />
+                Duplicar
+              </button>
+
+              <button className="btn-new" onClick={handleCreateNew} title="Criar novo currículo">
+                <FiPlus size={14} style={{ marginRight: 4 }} />
+                Novo
+              </button>
             </>
           )}
-          <button className="btn-new" onClick={handleCreateNew} title="Criar novo currículo">
-            <FiPlus size={14} style={{ marginRight: 4 }} />
-            Novo
-          </button>
 
           <span
             className="save-status"

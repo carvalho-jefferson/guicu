@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld('resumeAPI', {
   // Criar um novo currículo em branco e retornar o ID
   createResume: () => ipcRenderer.invoke('create-resume'),
 
+  // Duplicar um currículo existente
+  duplicateResume: (sourceId) => ipcRenderer.invoke('duplicate-resume', sourceId),
+
   // Renomear um currículo
   renameResume: (payload) => ipcRenderer.invoke('rename-resume', payload),
 

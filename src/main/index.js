@@ -188,6 +188,44 @@ ipcMain.handle('rename-resume', async (_event, { id, name }) => {
   }
 })
 
+// 7. Duplicar um currículo existente
+ipcMain.handle('duplicate-resume', async (_event, sourceId) => {
+  try {
+    // Carrega os dados do currículo original
+    const sourcePath = path.join(RESUMES_DIR, `${sourceId}.json`)
+    const raw = await fs.promises.readFile(sourcePath, 'utf-8')
+    const sourceData = JSON.parse(raw)
+
+    // Gera novo ID e define um nome sugestivo
+    const newId = crypto.randomUUID()
+    const sourceEntry = await (async () => {
+      const idxRaw = await fs.promises.readFile(INDEX_PATH, 'utf-8')
+      return JSON.parse(idxRaw).find((i) => i.id === sourceId)
+    })()
+    const sourceName = sourceEntry?.name || 'Sem título'
+    const newName = `Cópia de ${sourceName}`
+
+    const now = new Date().toISOString()
+
+    // Atualiza o índice
+    const indexRaw = await fs.promises.readFile(INDEX_PATH, 'utf-8')
+    const index = JSON.parse(indexRaw)
+    index.push({ id: newId, name: newName, createdAt: now, updatedAt: now })
+    await fs.promises.writeFile(INDEX_PATH, JSON.stringify(index, null, 2), 'utf-8')
+
+    // Cria o arquivo duplicado com os mesmos dados
+    await fs.promises.writeFile(
+      path.join(RESUMES_DIR, `${newId}.json`),
+      JSON.stringify(sourceData, null, 2),
+      'utf-8'
+    )
+
+    return { success: true, id: newId }
+  } catch (e) {
+    return { success: false, error: e.message }
+  }
+})
+
 // Verificação de atualização via GitHub Releases
 ipcMain.handle('check-update', async () => {
   try {
