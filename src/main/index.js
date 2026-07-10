@@ -12,9 +12,44 @@ import { autoUpdater } from 'electron-updater'
 const RESUMES_DIR = join(app.getPath('userData'), 'resumes')
 const INDEX_PATH = join(RESUMES_DIR, 'index.json')
 
+// Configura autoUpdater para não baixar automaticamente, apenas notificar
+autoUpdater.autoDownload = false
+autoUpdater.autoInstallOnAppQuit = false
+
+autoUpdater.on('update-available', async (info) => {
+  // Caixa de diálogo é vinculada à janela principal (mainWindow), garantindo que apareça sobre ela e fique em primeiro plano
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: 'Nova versão disponível',
+    message: `Uma nova versão (${info.version}) do Guicu está disponível.`,
+    detail:
+      'Deseja baixar e instalar agora?\n\nO download será iniciado e, ao concluir, o instalador será aberto automaticamente.',
+    buttons: ['Instalar agora', 'Mais tarde'],
+    defaultId: 0,
+    cancelId: 1
+  })
+
+  if (response === 0) {
+    autoUpdater.downloadUpdate()
+  }
+})
+
+autoUpdater.on('download-progress', (progress) => {
+  console.log(`Download: ${progress.percent}%`) // log
+})
+
+autoUpdater.on('update-downloaded', () => {
+  // Download concluído – fecha o app e inicia o instalador
+  autoUpdater.quitAndInstall()
+})
+
+// Referência global da janela principal
+let mainWindow = null
+
 // Janela
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  // Atribui à variável global mainWindow
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 900,
@@ -29,7 +64,16 @@ function createWindow() {
     }
   })
 
-  mainWindow.on('ready-to-show', () => mainWindow.show())
+  // Quando a janela estiver pronta para ser mostrada:
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+
+    // Agora que a janela está visível, ocorre a busca por atualizações. Evita que o diálogo apareça antes da janela principal e seja sobreposto.
+    if (!is.dev) {
+      autoUpdater.checkForUpdates()
+    }
+  })
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -336,9 +380,6 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-  if (!is.dev) {
-    autoUpdater.checkForUpdatesAndNotify()
-  }
 })
 
 app.on('window-all-closed', () => {
