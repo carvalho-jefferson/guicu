@@ -6,7 +6,11 @@ function StepCertifications({ data, onChange }) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
 
-  const handle = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
+  const handle = (e) => {
+    const { name, value } = e.target
+    const newValue = name === 'link' ? value.replace(/\s/g, '') : value
+    setForm((p) => ({ ...p, [name]: newValue }))
+  }
 
   const save = () => {
     if (!form.name) return

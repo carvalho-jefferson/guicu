@@ -11,7 +11,9 @@ function StepProjects({ data, onChange }) {
 
   const handle = (e) => {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    // Remove espaços do campo de link
+    const newValue = name === 'link' ? value.replace(/\s/g, '') : value
+    setForm((prev) => ({ ...prev, [name]: newValue }))
   }
 
   const addBullet = () => {
