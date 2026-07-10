@@ -188,6 +188,59 @@ ipcMain.handle('rename-resume', async (_event, { id, name }) => {
   }
 })
 
+// 7. Duplicar um currículo existente
+ipcMain.handle('duplicate-resume', async (_event, sourceId) => {
+  // Valida se sourceId é um UUID válido
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (typeof sourceId !== 'string' || !uuidRegex.test(sourceId)) {
+    return { success: false, error: 'ID de currículo inválido' }
+  }
+
+  let newId = null
+  try {
+    // Carrega os dados do currículo original
+    const sourcePath = path.join(RESUMES_DIR, `${sourceId}.json`)
+    const raw = await fs.promises.readFile(sourcePath, 'utf-8')
+    const sourceData = JSON.parse(raw)
+
+    // Lê o índice uma única vez
+    const indexRaw = await fs.promises.readFile(INDEX_PATH, 'utf-8')
+    const index = JSON.parse(indexRaw)
+
+    // Encontra o nome do currículo original
+    const sourceEntry = index.find((item) => item.id === sourceId)
+    if (!sourceEntry) {
+      return { success: false, error: 'Currículo original não encontrado no índice' }
+    }
+
+    const sourceName = sourceEntry.name || 'Sem título'
+    const newName = `Cópia de ${sourceName}`
+    newId = crypto.randomUUID()
+    const now = new Date().toISOString()
+
+    // 1. Cria o arquivo duplicado
+    const newFilePath = path.join(RESUMES_DIR, `${newId}.json`)
+    await fs.promises.writeFile(newFilePath, JSON.stringify(sourceData, null, 2), 'utf-8')
+
+    // 2. Atualiza o índice (só depois do arquivo estar salvo)
+    index.push({ id: newId, name: newName, createdAt: now, updatedAt: now })
+    await fs.promises.writeFile(INDEX_PATH, JSON.stringify(index, null, 2), 'utf-8')
+
+    return { success: true, id: newId }
+  } catch (e) {
+    // Se o erro ocorreu após a criação do arquivo, remove-o (rollback)
+    if (newId) {
+      try {
+        const newFilePath = path.join(RESUMES_DIR, `${newId}.json`)
+        await fs.promises.unlink(newFilePath)
+      } catch (cleanupErr) {
+        console.error('Falha ao limpar arquivo duplicado:', cleanupErr)
+      }
+    }
+    return { success: false, error: e.message }
+  }
+})
+
 // Verificação de atualização via GitHub Releases
 ipcMain.handle('check-update', async () => {
   try {
