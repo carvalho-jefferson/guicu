@@ -60,6 +60,7 @@ function App() {
   const [showValidationModal, setShowValidationModal] = useState(false)
   const [maxVisitedStep, setMaxVisitedStep] = useState(0)
   const [updateAvailable, setUpdateAvailable] = useState(null) // null | string (versão)
+  const [downloadProgress, setDownloadProgress] = useState(null) // null = não está baixando
 
   // Estados para múltiplos currículos
   const [resumeList, setResumeList] = useState([])
@@ -174,6 +175,14 @@ function App() {
       if (latest !== current) setUpdateAvailable(result.latestVersion)
     }
     checkUpdate()
+  }, [])
+
+  useEffect(() => {
+    if (window.resumeAPI.onUpdateDownloadProgress) {
+      window.resumeAPI.onUpdateDownloadProgress((percent) => {
+        setDownloadProgress(percent)
+      })
+    }
   }, [])
 
   // Handlers de gerenciamento de currículos
@@ -431,26 +440,35 @@ function App() {
             {getSaveStatusText()}
           </span>
 
-          {updateAvailable && (
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
-              }}
-              style={{
-                marginLeft: 8,
-                fontSize: 12,
-                background: 'rgba(255,255,255,0.15)',
-                color: 'white',
-                padding: '4px 10px',
-                borderRadius: 10,
-                textDecoration: 'none',
-                whiteSpace: 'nowrap'
-              }}
+          {/* Se estiver baixando, mostra progresso; senão, mostra o link manual (se disponível) */}
+          {downloadProgress !== null ? (
+            <div
+              style={{ marginLeft: 8, fontSize: 12, color: 'var(--text)', whiteSpace: 'nowrap' }}
             >
-              <FiArrowUp /> Nova versão disponível: {updateAvailable}
-            </a>
+              Baixando atualização: {Math.round(downloadProgress)}%
+            </div>
+          ) : (
+            updateAvailable && (
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
+                }}
+                style={{
+                  marginLeft: 8,
+                  fontSize: 12,
+                  background: 'rgba(255,255,255,0.15)',
+                  color: 'white',
+                  padding: '4px 10px',
+                  borderRadius: 10,
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <FiArrowUp /> Nova versão disponível: {updateAvailable}
+              </a>
+            )
           )}
         </header>
         <div className="app-body">

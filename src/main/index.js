@@ -35,7 +35,12 @@ autoUpdater.on('update-available', async (info) => {
 })
 
 autoUpdater.on('download-progress', (progress) => {
-  console.log(`Download: ${progress.percent}%`) // log
+  // Log no terminal
+  console.log(`Download: ${progress.percent}%`)
+
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('update-download-progress', progress.percent)
+  }
 })
 
 autoUpdater.on('update-downloaded', () => {

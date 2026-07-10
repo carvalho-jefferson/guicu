@@ -24,5 +24,8 @@ contextBridge.exposeInMainWorld('resumeAPI', {
 
   exportPDF: (payload) => ipcRenderer.invoke('export-pdf', payload),
 
-  checkUpdate: () => ipcRenderer.invoke('check-update')
+  checkUpdate: () => ipcRenderer.invoke('check-update'),
+
+  onUpdateDownloadProgress: (callback) =>
+    ipcRenderer.on('update-download-progress', (_event, percent) => callback(percent))
 })
