@@ -22,6 +22,7 @@ import {
   FiX,
   FiCopy
 } from 'react-icons/fi'
+import OnboardingModal from './components/OnboardingModal'
 
 const STEPS = [
   'Dados Pessoais',
@@ -61,6 +62,10 @@ function App() {
   const [maxVisitedStep, setMaxVisitedStep] = useState(0)
   const [updateAvailable, setUpdateAvailable] = useState(null) // null | string (versão)
   const [downloadProgress, setDownloadProgress] = useState(null) // null = não está baixando
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    // Executado apenas uma vez, na montagem do componente
+    return !localStorage.getItem('guicu-onboarding')
+  })
 
   // Estados para múltiplos currículos
   const [resumeList, setResumeList] = useState([])
@@ -159,6 +164,12 @@ function App() {
     },
     [activeResumeId, resumeList]
   )
+
+  // Fecha o modal e registra que o onboarding foi concluído
+  const closeOnboarding = () => {
+    localStorage.setItem('guicu-onboarding', 'true')
+    setShowOnboarding(false)
+  }
 
   useEffect(() => {
     if (!loaded) return
@@ -559,6 +570,8 @@ function App() {
           </div>
         </div>
       )}
+
+      {showOnboarding && <OnboardingModal onClose={closeOnboarding} />}
     </>
   )
 }
