@@ -91,13 +91,46 @@ body {
 
 .app-header {
   background: linear-gradient(135deg, #165345 0%, #1d6d58 50%, #267961 100%);
-
   color: white;
-  padding: 12px 24px;
+  padding: 0 0 0 24px;
   display: flex;
+  height: 60px;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+  -webkit-app-region: drag; /* cabeçalho arrastável */
+  user-select: none;
+}
+.app-header > * {
+  -webkit-app-region: no-drag; /* botões e textos internos não arrastam */
+}
+
+.window-controls {
+  display: flex;
+  height: 100%; /* acompanha a altura do cabeçalho */
+  margin-left: auto;
+  -webkit-app-region: no-drag; /* área de botões não arrasta */
+}
+
+.window-btn {
+  background: transparent;
+  width: 46px;
+  border: none;
+  color: white;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.window-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.window-close:hover {
+  background: #e53e3e;
 }
 .resume-select {
   margin-left: 12px;
@@ -572,6 +605,12 @@ body {
     color: #fc8181;
   }
 }
+.download-progress {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+}
 
 /* Página do currículo */
 .resume-page {
@@ -582,12 +621,52 @@ body {
 }
 .resume-toolbar {
   background: var(--surface);
-  padding: 12px 24px;
+  padding: 0 0 0 24px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+  height: 60px;
+}
+/* Agrupa seletor de fonte e botões de exportação, empurrando para a direita */
+.resume-toolbar .toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  margin-right: 2px;
+}
+/* Botões de janela na toolbar do currículo */
+.resume-toolbar .window-controls {
+  margin-left: 0;
+}
+
+/* Botões de janela na resume-toolbar */
+.resume-toolbar .window-btn {
+  color: var(--muted);
+}
+.resume-toolbar .window-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  height: 100%;
+}
+.resume-toolbar .window-close:hover {
+  background: #e53e3e;
+  color: white;
+}
+.resume-toolbar .font-selector {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.resume-toolbar select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
 }
 .export-buttons {
   display: flex;
@@ -1114,6 +1193,12 @@ button:active {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
