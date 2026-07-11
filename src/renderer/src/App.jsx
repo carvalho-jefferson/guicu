@@ -20,7 +20,9 @@ import {
   FiPlus,
   FiCheck,
   FiX,
-  FiCopy
+  FiCopy,
+  FiMinus,
+  FiSquare
 } from 'react-icons/fi'
 import OnboardingModal from './components/OnboardingModal'
 
@@ -453,9 +455,7 @@ function App() {
 
           {/* Se estiver baixando, mostra progresso; senão, mostra o link manual (se disponível) */}
           {downloadProgress !== null ? (
-            <div
-              style={{ marginLeft: 8, fontSize: 12, color: 'var(--text)', whiteSpace: 'nowrap' }}
-            >
+            <div className="download-progress">
               Baixando atualização: {Math.round(downloadProgress)}%
             </div>
           ) : (
@@ -481,6 +481,30 @@ function App() {
               </a>
             )
           )}
+          {/* Botões de controle da janela */}
+          <div className="window-controls">
+            <button
+              onClick={() => window.resumeAPI.minimizeWindow()}
+              className="window-btn"
+              title="Minimizar"
+            >
+              <FiMinus size={14} />
+            </button>
+            <button
+              onClick={() => window.resumeAPI.maximizeWindow()}
+              className="window-btn"
+              title="Maximizar/Restaurar"
+            >
+              <FiSquare size={12} />
+            </button>
+            <button
+              onClick={() => window.resumeAPI.closeWindow()}
+              className="window-btn window-close"
+              title="Fechar"
+            >
+              <FiX size={14} />
+            </button>
+          </div>
         </header>
         <div className="app-body">
           <aside className="sidebar">

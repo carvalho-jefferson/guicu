@@ -27,5 +27,9 @@ contextBridge.exposeInMainWorld('resumeAPI', {
   checkUpdate: () => ipcRenderer.invoke('check-update'),
 
   onUpdateDownloadProgress: (callback) =>
-    ipcRenderer.on('update-download-progress', (_event, percent) => callback(percent))
+    ipcRenderer.on('update-download-progress', (_event, percent) => callback(percent)),
+
+  minimizeWindow: () => ipcRenderer.send('window-minimize'),
+  maximizeWindow: () => ipcRenderer.send('window-maximize'),
+  closeWindow: () => ipcRenderer.send('window-close')
 })

@@ -9,7 +9,9 @@ import {
   FiX,
   FiCheckCircle,
   FiAlertTriangle,
-  FiInfo
+  FiInfo,
+  FiMinus,
+  FiSquare
 } from 'react-icons/fi'
 
 function getScoreBand(score) {
@@ -111,6 +113,10 @@ function Resume({ resumeData, onBack, onUpdate }) {
     el.addEventListener('scroll', handleScroll)
     return () => el.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleMinimize = () => window.resumeAPI.minimizeWindow()
+  const handleMaximize = () => window.resumeAPI.maximizeWindow()
+  const handleClose = () => window.resumeAPI.closeWindow()
 
   const exportPDF = async () => {
     document.activeElement?.blur()
@@ -453,41 +459,40 @@ function Resume({ resumeData, onBack, onUpdate }) {
     <div className="resume-page">
       {/* Toolbar */}
       <div className="resume-toolbar">
-        <button
-          className="btn-secondary"
-          onClick={onBack}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
-        >
+        <button className="btn-secondary" onClick={onBack}>
           <FiArrowLeft /> Voltar e editar
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <label style={{ fontSize: 13, color: 'var(--muted)' }}>Fonte:</label>
-          <select
-            value={selectedFont}
-            onChange={(e) => setSelectedFont(e.target.value)}
-            style={{
-              padding: '6px 10px',
-              borderRadius: 6,
-              border: '1.5px solid var(--border)',
-              fontSize: 13,
-              background: 'var(--surface)',
-              color: 'var(--text)'
-            }}
-          >
-            <option value="Calibri">Calibri</option>
-            <option value="Arial">Arial</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Tahoma">Tahoma</option>
-            <option value="Cambria">Cambria</option>
-            <option value="Georgia">Georgia</option>
-          </select>
+        <div className="toolbar-actions">
+          <div className="font-selector">
+            <label>Fonte:</label>
+            <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
+              <option value="Calibri">Calibri</option>
+              <option value="Arial">Arial</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Cambria">Cambria</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+          </div>
+          <div className="export-buttons">
+            <button className="btn-export" onClick={exportPDF}>
+              <FiDownload /> Exportar PDF
+            </button>
+            <button className="btn-export" onClick={exportDOCX}>
+              <FiFileText /> Exportar DOCX
+            </button>
+          </div>
         </div>
-        <div className="export-buttons">
-          <button className="btn-export" onClick={exportPDF}>
-            <FiDownload /> Exportar PDF
+
+        <div className="window-controls">
+          <button onClick={handleMinimize} className="window-btn" title="Minimizar">
+            <FiMinus size={14} />
           </button>
-          <button className="btn-export" onClick={exportDOCX}>
-            <FiFileText /> Exportar DOCX
+          <button onClick={handleMaximize} className="window-btn" title="Maximizar/Restaurar">
+            <FiSquare size={12} />
+          </button>
+          <button onClick={handleClose} className="window-btn window-close" title="Fechar">
+            <FiX size={14} />
           </button>
         </div>
       </div>
