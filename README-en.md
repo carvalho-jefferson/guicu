@@ -9,8 +9,8 @@
 </h1>
 
 <p align="center">
-    <a href="https://github.com/carvalho-jefferson/guicu/releases">
-        <img src="https://img.shields.io/badge/Version-1.0.0-%231d6d58?style=flat" alt="Version">
+    <a href="https://github.com/carvalho-jefferson/guicu/releases/latest">
+        <img src="https://img.shields.io/badge/Version-1.3.0-%231d6d58?style=flat" alt="Version">
     </a>
     <a href="https://github.com/carvalho-jefferson/guicu/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-AGPL--3.0-%23114537?style=flat" alt="License">
