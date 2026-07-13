@@ -350,16 +350,10 @@ ipcMain.handle('export-pdf', async (event, resumeData = {}) => {
   if (!filePath) return { success: false, error: 'Salvamento cancelado' }
 
   try {
+    // Só preferCSSPageSize — o @page do CSS já define tamanho A4 e margem de 18mm
     const data = await win.webContents.printToPDF({
       printBackground: true,
-      preferCSSPageSize: true,
-      margins: {
-        marginType: 'custom',
-        top: 0.71, // 18 mm em polegadas
-        bottom: 0.71,
-        left: 0.71,
-        right: 0.71
-      }
+      preferCSSPageSize: true
     })
     fs.writeFileSync(filePath, data)
     return { success: true }
