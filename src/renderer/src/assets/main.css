@@ -612,6 +612,53 @@ body {
   white-space: nowrap;
 }
 
+/* Notificação de atualização (canto inferior direito) */
+.update-toast {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1500;
+  min-width: 220px;
+  font-size: 12.5px;
+  animation: modalFadeIn 0.25s ease;
+}
+.update-toast-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+.update-toast-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+}
+.update-toast-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+.update-toast-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.update-toast-link:hover {
+  text-decoration: underline;
+}
+
 /* Página do currículo */
 .resume-page {
   display: flex;

@@ -539,6 +539,36 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Notificação de atualização — fica fixa no canto inferior direito, fora do fluxo do header, pra nunca sobrepor os botões de janela nem o link manual de atualização */}
+      {(downloadProgress !== null || updateAvailable) && (
+        <div className="update-toast">
+          {downloadProgress !== null ? (
+            <>
+              <span className="update-toast-label">
+                Baixando atualização… {Math.round(downloadProgress)}%
+              </span>
+              <div className="update-toast-bar">
+                <div
+                  className="update-toast-bar-fill"
+                  style={{ width: `${Math.round(downloadProgress)}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <a
+              href="#"
+              className="update-toast-link"
+              onClick={(e) => {
+                e.preventDefault()
+                window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
+              }}
+            >
+              <FiArrowUp /> Nova versão disponível: {updateAvailable}
+            </a>
+          )}
+        </div>
+      )}
       {/* Modal de validação */}
       {showValidationModal && (
         <div
