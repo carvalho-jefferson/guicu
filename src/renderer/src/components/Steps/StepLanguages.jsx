@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import CustomSelect from '../common/CustomSelect'
 const levels = ['Básico', 'Intermediário', 'Avançado', 'Fluente', 'Nativo']
 
 function StepLanguages({ data, onChange }) {
@@ -30,6 +31,7 @@ function StepLanguages({ data, onChange }) {
         </div>
       ))}
       <div className="sub-form">
+        <h3>Novo idioma</h3>
         <div className="form-grid">
           <div className="form-group">
             <label>Idioma</label>
@@ -42,11 +44,13 @@ function StepLanguages({ data, onChange }) {
           </div>
           <div className="form-group">
             <label>Nível</label>
-            <select name="level" value={form.level} onChange={handle}>
-              {levels.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
-            </select>
+            <CustomSelect
+              className="form"
+              triggerClassName="form"
+              value={form.level}
+              onChange={(level) => setForm((p) => ({ ...p, level }))}
+              options={levels.map((l) => ({ value: l, label: l }))}
+            />
           </div>
         </div>
         <div className="sub-form-actions">

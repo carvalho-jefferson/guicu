@@ -9,7 +9,9 @@ import StepEducation from './components/Steps/StepEducation'
 import StepCertifications from './components/Steps/StepCertifications'
 import StepLanguages from './components/Steps/StepLanguages'
 import Resume from './components/Resume/Resume'
+import CustomSelect from './components/common/CustomSelect'
 import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
+import { DEFAULT_DESIGN } from './utils/designTokens'
 import './assets/main.css'
 import {
   FiArrowLeft,
@@ -47,6 +49,7 @@ const initialData = {
   certifications: [],
   languages: [],
   font: 'Calibri',
+  design: { ...DEFAULT_DESIGN },
   sectionTitles: { ...DEFAULT_SECTION_TITLES }
 }
 
@@ -408,23 +411,18 @@ function App() {
             </>
           ) : (
             <>
-              <select
-                className="resume-select"
+              <CustomSelect
+                className="resume-select-wrap"
+                triggerClassName="pill"
                 value={activeResumeId || ''}
-                title={resumeList.find((r) => r.id === activeResumeId)?.name || ''}
-                onChange={(e) => {
-                  setActiveResumeId(e.target.value)
+                onChange={(id) => {
+                  setActiveResumeId(id)
                   setStep(0)
                   setShowResume(false)
                   setMaxVisitedStep(0)
                 }}
-              >
-                {resumeList.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.name}
-                  </option>
-                ))}
-              </select>
+                options={resumeList.map((r) => ({ value: r.id, label: r.name }))}
+              />
               <button className="btn-new" onClick={handleStartRename} title="Renomear currículo">
                 <FiEdit2 size={14} style={{ marginRight: 4 }} />
                 Renomear
@@ -453,34 +451,6 @@ function App() {
             {getSaveStatusText()}
           </span>
 
-          {/* Se estiver baixando, mostra progresso; senão, mostra o link manual (se disponível) */}
-          {downloadProgress !== null ? (
-            <div className="download-progress">
-              Baixando atualização: {Math.round(downloadProgress)}%
-            </div>
-          ) : (
-            updateAvailable && (
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
-                }}
-                style={{
-                  marginLeft: 8,
-                  fontSize: 12,
-                  background: 'rgba(255,255,255,0.15)',
-                  color: 'white',
-                  padding: '4px 10px',
-                  borderRadius: 10,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <FiArrowUp /> Nova versão disponível: {updateAvailable}
-              </a>
-            )
-          )}
           {/* Botões de controle da janela */}
           <div className="window-controls">
             <button
@@ -539,6 +509,36 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Notificação de atualização — fica fixa no canto inferior direito, fora do fluxo do header, pra nunca sobrepor os botões de janela nem o link manual de atualização */}
+      {(downloadProgress !== null || updateAvailable) && (
+        <div className="update-toast">
+          {downloadProgress !== null ? (
+            <>
+              <span className="update-toast-label">
+                Baixando atualização… {Math.round(downloadProgress)}%
+              </span>
+              <div className="update-toast-bar">
+                <div
+                  className="update-toast-bar-fill"
+                  style={{ width: `${Math.round(downloadProgress)}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <a
+              href="#"
+              className="update-toast-link"
+              onClick={(e) => {
+                e.preventDefault()
+                window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
+              }}
+            >
+              <FiArrowUp /> Nova versão disponível: {updateAvailable}
+            </a>
+          )}
+        </div>
+      )}
       {/* Modal de validação */}
       {showValidationModal && (
         <div
