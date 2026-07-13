@@ -30,6 +30,7 @@ function StepLanguages({ data, onChange }) {
         </div>
       ))}
       <div className="sub-form">
+        <h3>Novo idioma</h3>
         <div className="form-grid">
           <div className="form-group">
             <label>Idioma</label>
