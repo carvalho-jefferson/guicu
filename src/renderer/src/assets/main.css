@@ -132,8 +132,89 @@ body {
 .window-close:hover {
   background: #e53e3e;
 }
-.resume-select {
+
+.resume-select-wrap {
   margin-left: 12px;
+}
+
+/* Dropdown customizado */
+.custom-select {
+  position: relative;
+}
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.custom-select-trigger-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.custom-select-chevron {
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  opacity: 0.7;
+}
+.custom-select-chevron.open {
+  transform: rotate(180deg);
+}
+.custom-select-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+.custom-select-option:hover {
+  background: var(--surface2);
+  transform: none;
+  box-shadow: none;
+}
+.custom-select-option.active {
+  background: var(--surface2);
+  font-weight: 600;
+}
+.custom-select-option-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.custom-select-check {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.custom-select-trigger.pill {
   padding: 6px 12px;
   border-radius: 20px;
   border: 1.5px solid rgba(255, 255, 255, 0.3);
@@ -438,9 +519,13 @@ body {
   border-radius: var(--radius);
   margin-bottom: 8px;
   border: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
 }
 .list-item strong {
   font-size: 14px;
+  font-weight: 700;
   color: var(--text);
 }
 .date-range {

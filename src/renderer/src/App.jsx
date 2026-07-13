@@ -9,6 +9,7 @@ import StepEducation from './components/Steps/StepEducation'
 import StepCertifications from './components/Steps/StepCertifications'
 import StepLanguages from './components/Steps/StepLanguages'
 import Resume from './components/Resume/Resume'
+import CustomSelect from './components/common/CustomSelect'
 import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
 import './assets/main.css'
 import {
@@ -408,23 +409,18 @@ function App() {
             </>
           ) : (
             <>
-              <select
-                className="resume-select"
+              <CustomSelect
+                className="resume-select-wrap"
+                triggerClassName="pill"
                 value={activeResumeId || ''}
-                title={resumeList.find((r) => r.id === activeResumeId)?.name || ''}
-                onChange={(e) => {
-                  setActiveResumeId(e.target.value)
+                onChange={(id) => {
+                  setActiveResumeId(id)
                   setStep(0)
                   setShowResume(false)
                   setMaxVisitedStep(0)
                 }}
-              >
-                {resumeList.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.name}
-                  </option>
-                ))}
-              </select>
+                options={resumeList.map((r) => ({ value: r.id, label: r.name }))}
+              />
               <button className="btn-new" onClick={handleStartRename} title="Renomear currículo">
                 <FiEdit2 size={14} style={{ marginRight: 4 }} />
                 Renomear

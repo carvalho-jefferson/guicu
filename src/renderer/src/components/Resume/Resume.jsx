@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { calculateATSScore } from '../../utils/atsEngine'
 import { getSectionTitles } from '../../i18n/resumeLabels'
+import CustomSelect from '../common/CustomSelect'
 import {
   FiArrowLeft,
   FiDownload,
