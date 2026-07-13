@@ -11,6 +11,7 @@ import StepLanguages from './components/Steps/StepLanguages'
 import Resume from './components/Resume/Resume'
 import CustomSelect from './components/common/CustomSelect'
 import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
+import { DEFAULT_DESIGN } from './utils/designTokens'
 import './assets/main.css'
 import {
   FiArrowLeft,
@@ -48,6 +49,7 @@ const initialData = {
   certifications: [],
   languages: [],
   font: 'Calibri',
+  design: { ...DEFAULT_DESIGN },
   sectionTitles: { ...DEFAULT_SECTION_TITLES }
 }
 
@@ -449,34 +451,6 @@ function App() {
             {getSaveStatusText()}
           </span>
 
-          {/* Se estiver baixando, mostra progresso; senão, mostra o link manual (se disponível) */}
-          {downloadProgress !== null ? (
-            <div className="download-progress">
-              Baixando atualização: {Math.round(downloadProgress)}%
-            </div>
-          ) : (
-            updateAvailable && (
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://github.com/carvalho-jefferson/guicu/releases/latest')
-                }}
-                style={{
-                  marginLeft: 8,
-                  fontSize: 12,
-                  background: 'rgba(255,255,255,0.15)',
-                  color: 'white',
-                  padding: '4px 10px',
-                  borderRadius: 10,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <FiArrowUp /> Nova versão disponível: {updateAvailable}
-              </a>
-            )
-          )}
           {/* Botões de controle da janela */}
           <div className="window-controls">
             <button
