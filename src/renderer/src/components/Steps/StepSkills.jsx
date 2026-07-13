@@ -69,34 +69,25 @@ function StepSkills({ data, onChange }) {
       groups[cat].push(skill.name)
     })
 
-    return (
-      <div style={{ marginTop: 16 }}>
-        {Object.entries(groups).map(([cat, items]) => (
-          <div key={cat} style={{ marginBottom: 8, display: 'flex', alignItems: 'baseline' }}>
-            <div style={{ flex: 1 }}>
-              {cat !== 'Geral' && <strong>{cat}:</strong>}
-              <span style={{ color: 'var(--muted)' }}> {items.join(', ')}</span>
-            </div>
-            <div style={{ display: 'flex', gap: 6, marginLeft: 12 }}>
-              <button
-                onClick={() => handleEditGroup(cat)}
-                className="btn-edit"
-                title="Editar grupo"
-              >
-                <FiEdit2 size={12} />
-              </button>
-              <button
-                onClick={() => handleRemoveGroup(cat)}
-                className="btn-remove"
-                title="Remover grupo"
-              >
-                <FiX size={14} />
-              </button>
-            </div>
-          </div>
-        ))}
+    return Object.entries(groups).map(([cat, items]) => (
+      <div key={cat} className="list-item">
+        <div>
+          {cat !== 'Geral' && <strong>{cat}:</strong>} {items.join(', ')}
+        </div>
+        <div className="item-actions">
+          <button onClick={() => handleEditGroup(cat)} className="btn-edit" title="Editar grupo">
+            <FiEdit2 size={12} />
+          </button>
+          <button
+            onClick={() => handleRemoveGroup(cat)}
+            className="btn-remove"
+            title="Remover grupo"
+          >
+            <FiX size={14} />
+          </button>
+        </div>
       </div>
-    )
+    ))
   }
 
   return (
@@ -107,28 +98,31 @@ function StepSkills({ data, onChange }) {
         exatamente as palavras-chave que aparecem na descrição da vaga.
       </p>
 
-      <div className="form-group" style={{ marginBottom: 12 }}>
-        <label>
-          Nova habilidade
-          <FiHelpCircle
-            title="Evite listar habilidades que você não domina ou que não são relevantes para a vaga. Lembre-se que na entrevista técnica, os recrutadores podem perguntar sobre qualquer habilidade listada no seu currículo. Seja honesto e estratégico na escolha das habilidades para aumentar suas chances de sucesso!"
-            style={{ marginLeft: 6, cursor: 'help', color: 'var(--muted)', fontSize: 14 }}
-          />
-        </label>
-        <div className="input-row">
-          <input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ex.: Linguagens: Python, Java, JavaScript, C++"
-          />
-          <button className="btn-add" onClick={addSkill}>
-            {editingCategory !== null ? 'Salvar' : '+ Adicionar'}
-          </button>
+      {renderGrouped()}
+
+      <div className="sub-form">
+        <h3>{editingCategory !== null ? 'Editar habilidades' : 'Nova habilidade'}</h3>
+        <div className="form-group">
+          <label>
+            Categoria e habilidades
+            <FiHelpCircle
+              title="Evite listar habilidades que você não domina ou que não são relevantes para a vaga. Lembre-se que na entrevista técnica, os recrutadores podem perguntar sobre qualquer habilidade listada no seu currículo. Seja honesto e estratégico na escolha das habilidades para aumentar suas chances de sucesso!"
+              style={{ marginLeft: 6, cursor: 'help', color: 'var(--muted)', fontSize: 14 }}
+            />
+          </label>
+          <div className="input-row">
+            <input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ex.: Linguagens: Python, Java, JavaScript, C++"
+            />
+            <button className="btn-add" onClick={addSkill}>
+              {editingCategory !== null ? 'Salvar' : '+ Adicionar'}
+            </button>
+          </div>
         </div>
       </div>
-
-      {renderGrouped()}
 
       {data.length > 0 && data.length < 5 && (
         <p className="hint warn">Recomendado pelo menos 5 habilidades técnicas.</p>
