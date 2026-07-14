@@ -23,7 +23,7 @@ Português • [English](README-en.md)
 
 <p align="center">
     <a href="https://github.com/carvalho-jefferson/guicu/releases/latest">
-        <img src="assets/card-baixar-pt.svg" width="20%" alt="Card para baixar para Windows, macOS e Linux">
+        <img src="assets/card-baixar-pt.svg" width="28%" alt="Card para baixar para Windows, macOS e Linux">
     </a>
 </p>
 

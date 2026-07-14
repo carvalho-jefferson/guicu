@@ -23,7 +23,7 @@
 
 <p align="center">
     <a href="https://github.com/carvalho-jefferson/guicu/releases/latest">
-        <img src="assets/card-baixar-en.svg" width="20%" alt="Download card for Windows, macOS, and Linux">
+        <img src="assets/card-baixar-en.svg" width="28%" alt="Download card for Windows, macOS, and Linux">
     </a>
 </p>
 
