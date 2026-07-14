@@ -72,6 +72,8 @@ function App() {
     return !localStorage.getItem('guicu-onboarding')
   })
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
   // Estados para múltiplos currículos
   const [resumeList, setResumeList] = useState([])
   const [activeResumeId, setActiveResumeId] = useState(null)
@@ -233,16 +235,19 @@ function App() {
     setRenameValue('')
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!activeResumeId) return
-    if (!confirm('Tem certeza que deseja excluir este currículo?')) return
+    setShowDeleteModal(true)
+  }
+
+  const confirmDelete = async () => {
+    setShowDeleteModal(false)
     await window.resumeAPI.deleteResume(activeResumeId)
     await loadResumeList()
     const list = await window.resumeAPI.listResumes()
     if (list.success && list.data.length > 0) {
       setActiveResumeId(list.data[0].id)
     } else {
-      // Se não sobrou nenhum, cria um novo
       const createResult = await window.resumeAPI.createResume()
       if (createResult.success) {
         await loadResumeList()
@@ -591,6 +596,32 @@ function App() {
             >
               Entendi
             </button>
+          </div>
+        </div>
+      )}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: 400 }}>
+            <h2 style={{ marginTop: 0, color: '#a91a1a' }}>Excluir currículo</h2>
+            <p style={{ marginBottom: 24 }}>
+              Tem certeza que deseja excluir este currículo? Essa ação não pode ser desfeita.
+            </p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn-primary"
+                style={{ flex: 1, background: '#e53e3e' }}
+                onClick={confirmDelete}
+              >
+                Excluir
+              </button>
+            </div>
           </div>
         </div>
       )}
