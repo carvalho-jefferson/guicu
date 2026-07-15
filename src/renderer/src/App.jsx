@@ -457,74 +457,74 @@ function App() {
     <>
       <div className="app-container">
         <header className="app-header">
-          <h1>Guicu</h1>
+          <div className="header-left">
+            <h1>Guicu</h1>
+          </div>
 
-          {/* Seletor ou campo de renomeação */}
-          {isRenaming ? (
-            <>
-              <input
-                value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleConfirmRename()
-                }}
-                style={{
-                  marginLeft: 12,
-                  padding: '4px 8px',
-                  width: 200,
-                  maxWidth: 200,
-                  boxSizing: 'border-box'
-                }}
-                autoFocus
-              />
-              <button className="btn-new" onClick={handleConfirmRename} title="Confirmar">
-                <FiCheck size={16} />
-              </button>
-              <button className="btn-new" onClick={handleCancelRename} title="Cancelar">
-                <FiX size={16} />
-              </button>
-            </>
-          ) : (
-            <>
-              <CustomSelect
-                className="resume-select-wrap"
-                triggerClassName="pill"
-                value={activeResumeId || ''}
-                onChange={(id) => {
-                  setActiveResumeId(id)
-                  setStep(0)
-                  setShowResume(false)
-                  setMaxVisitedStep(0)
-                }}
-                options={resumeList.map((r) => ({ value: r.id, label: r.name }))}
-              />
-              <button className="btn-new" onClick={handleStartRename} title="Renomear currículo">
-                <FiEdit2 size={14} style={{ marginRight: 4 }} />
-                Renomear
-              </button>
+          <div className="header-center">
+            {isRenaming ? (
+              <>
+                <input
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleConfirmRename()
+                  }}
+                  style={{
+                    padding: '4px 8px',
+                    width: 200,
+                    maxWidth: 200,
+                    boxSizing: 'border-box'
+                  }}
+                  autoFocus
+                />
+                <button className="btn-new" onClick={handleConfirmRename} title="Confirmar">
+                  <FiCheck size={16} />
+                </button>
+                <button className="btn-new" onClick={handleCancelRename} title="Cancelar">
+                  <FiX size={16} />
+                </button>
+              </>
+            ) : (
+              <>
+                <CustomSelect
+                  className="resume-select-wrap"
+                  triggerClassName="pill"
+                  value={activeResumeId || ''}
+                  onChange={(id) => {
+                    setActiveResumeId(id)
+                    setStep(0)
+                    setShowResume(false)
+                    setMaxVisitedStep(0)
+                  }}
+                  options={resumeList.map((r) => ({ value: r.id, label: r.name }))}
+                />
+                <button className="btn-new" onClick={handleStartRename} title="Renomear currículo">
+                  <FiEdit2 size={14} style={{ marginRight: 4 }} />
+                  Renomear
+                </button>
+                <button className="btn-new" onClick={handleDelete} title="Excluir currículo">
+                  <FiTrash2 size={14} style={{ marginRight: 4 }} />
+                  Excluir
+                </button>
+                <button className="btn-new" onClick={handleDuplicate} title="Duplicar currículo">
+                  <FiCopy size={14} style={{ marginRight: 4 }} />
+                  Duplicar
+                </button>
+                <button className="btn-new" onClick={handleCreateNew} title="Criar novo currículo">
+                  <FiPlus size={14} style={{ marginRight: 4 }} />
+                  Novo
+                </button>
+              </>
+            )}
 
-              <button className="btn-new" onClick={handleDelete} title="Excluir currículo">
-                <FiTrash2 size={14} style={{ marginRight: 4 }} />
-                Excluir
-              </button>
-              <button className="btn-new" onClick={handleDuplicate} title="Duplicar currículo">
-                <FiCopy size={14} style={{ marginRight: 4 }} />
-                Duplicar
-              </button>
-
-              <button className="btn-new" onClick={handleCreateNew} title="Criar novo currículo">
-                <FiPlus size={14} style={{ marginRight: 4 }} />
-                Novo
-              </button>
-            </>
-          )}
-
-          <span
-            className="save-status"
-            title={lastSaveTime ? `Último salvamento: ${lastSaveTime.toLocaleString()}` : ''}
-          >
-            {getSaveStatusText()}
-          </span>
+            <span
+              className="save-status"
+              title={lastSaveTime ? `Último salvamento: ${lastSaveTime.toLocaleString()}` : ''}
+            >
+              {getSaveStatusText()}
+            </span>
+          </div>
 
           {/* Botões de controle da janela */}
           <div className="window-controls">
