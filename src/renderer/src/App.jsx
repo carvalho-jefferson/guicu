@@ -24,7 +24,9 @@ import {
   FiX,
   FiCopy,
   FiMinus,
-  FiSquare
+  FiSquare,
+  FiSettings,
+  FiGithub
 } from 'react-icons/fi'
 import OnboardingModal from './components/OnboardingModal'
 
@@ -91,6 +93,18 @@ function App() {
       setResumeList(result.data)
     }
   }, [])
+
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+  const [theme, setTheme] = useState(() => localStorage.getItem('guicu-theme') || 'system')
+
+  useEffect(() => {
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+    localStorage.setItem('guicu-theme', theme)
+  }, [theme])
 
   // Reseta o formulário quando não há currículo ativo
   useEffect(() => {
@@ -541,6 +555,14 @@ function App() {
         <div className="app-body">
           <aside className="sidebar">
             <ProgressBar steps={STEPS} current={step} onStepClick={goToStep} />
+            <button
+              type="button"
+              className="sidebar-settings-btn"
+              onClick={() => setShowSettingsModal(true)}
+              title="Configurações"
+            >
+              <FiSettings size={18} />
+            </button>
           </aside>
           <div className="wizard-content">
             <div className="wizard-card">
@@ -718,6 +740,75 @@ function App() {
               onClick={() => setShowCommitErrorModal(false)}
             >
               Entendi
+            </button>
+          </div>
+        </div>
+      )}
+      {showSettingsModal && (
+        <div className="modal-overlay" onClick={() => setShowSettingsModal(false)}>
+          <div
+            className="modal-content"
+            style={{ maxWidth: 440 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ marginTop: 0, color: 'var(--primary)' }}>Configurações</h2>
+
+            <div className="settings-section">
+              <h3 className="settings-section-title">Aparência</h3>
+              <div className="theme-options">
+                <label className="theme-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={theme === 'system'}
+                    onChange={() => setTheme('system')}
+                  />
+                  Padrão do sistema
+                </label>
+                <label className="theme-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={theme === 'light'}
+                    onChange={() => setTheme('light')}
+                  />
+                  Claro
+                </label>
+                <label className="theme-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={theme === 'dark'}
+                    onChange={() => setTheme('dark')}
+                  />
+                  Escuro
+                </label>
+              </div>
+            </div>
+
+            <div className="settings-section">
+              <h3 className="settings-section-title">Sobre</h3>
+              <p className="settings-about-text">
+                Guicu — seu currículo guiado. Crie, edite, analise e exporte currículos offline, com
+                total privacidade.
+              </p>
+              <p className="settings-version">Versão {__APP_VERSION__}</p>
+              <a
+                href="https://github.com/carvalho-jefferson/guicu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="settings-github-link"
+              >
+                <FiGithub size={16} /> Ver repositório no GitHub
+              </a>
+            </div>
+
+            <button
+              className="btn-primary"
+              style={{ width: '100%', marginTop: 8 }}
+              onClick={() => setShowSettingsModal(false)}
+            >
+              Fechar
             </button>
           </div>
         </div>
