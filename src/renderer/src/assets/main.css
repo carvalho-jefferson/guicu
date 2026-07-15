@@ -124,17 +124,34 @@ textarea {
 .app-header {
   background: linear-gradient(135deg, #165345 0%, #1d6d58 50%, #267961 100%);
   color: white;
-  padding: 0 0 0 24px;
+  padding: 0;
   display: flex;
   height: 60px;
   align-items: center;
-  gap: 12px;
   flex-shrink: 0;
-  -webkit-app-region: drag; /* cabeçalho arrastável */
+  -webkit-app-region: drag;
   user-select: none;
 }
 .app-header > * {
-  -webkit-app-region: no-drag; /* botões e textos internos não arrastam */
+  -webkit-app-region: no-drag;
+}
+
+.header-left {
+  width: 210px;
+  flex-shrink: 0;
+  padding-left: 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.header-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .window-controls {
@@ -163,10 +180,6 @@ textarea {
 
 .window-close:hover {
   background: #e53e3e;
-}
-
-.resume-select-wrap {
-  margin-left: 12px;
 }
 
 /* Dropdown customizado */
@@ -303,7 +316,6 @@ textarea {
 .save-status {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.6);
-  margin-left: auto;
 }
 .btn-new {
   background: rgba(255, 255, 255, 0.15);
