@@ -19,6 +19,9 @@ Português • [English](README-en.md)
     </a>
     <img src="https://img.shields.io/badge/React-%23124237?style=flat" alt="React">
     <img src="https://img.shields.io/badge/Electron-%23124237?style=flat" alt="Electron">
+    <a href="https://github.com/carvalho-jefferson/guicu/releases">
+        <img src="https://img.shields.io/github/downloads/carvalho-jefferson/guicu/total?style=flat&color=124237" alt="Total de downloads">
+    </a>
 </p>
 
 <p align="center">
