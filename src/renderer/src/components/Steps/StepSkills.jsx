@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
 
-function StepSkills({ data, onChange }) {
+const StepSkills = forwardRef(function StepSkills({ data, onChange }, ref) {
   const [inputValue, setInputValue] = useState('')
   const [editingCategory, setEditingCategory] = useState(null)
 
@@ -90,6 +90,18 @@ function StepSkills({ data, onChange }) {
     ))
   }
 
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => inputValue.trim() !== '',
+    commit: () => {
+      if (inputValue.trim()) addSkill()
+      return true
+    },
+    discard: () => {
+      setInputValue('')
+      setEditingCategory(null)
+    }
+  }))
+
   return (
     <div className="step">
       <h2>Habilidades Técnicas</h2>
@@ -132,6 +144,6 @@ function StepSkills({ data, onChange }) {
       )}
     </div>
   )
-}
+})
 
 export default StepSkills

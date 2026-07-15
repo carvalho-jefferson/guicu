@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import CustomSelect from '../common/CustomSelect'
 const levels = ['Básico', 'Intermediário', 'Avançado', 'Fluente', 'Nativo']
 
-function StepLanguages({ data, onChange }) {
+const StepLanguages = forwardRef(function StepLanguages({ data, onChange }, ref) {
   const [form, setForm] = useState({ language: '', level: 'Básico' })
   const handle = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
   const add = () => {
@@ -11,6 +11,15 @@ function StepLanguages({ data, onChange }) {
     setForm({ language: '', level: 'Básico' })
   }
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => form.language.trim() !== '',
+    commit: () => {
+      if (form.language.trim()) add()
+      return true
+    },
+    discard: () => setForm({ language: '', level: 'Básico' })
+  }))
 
   return (
     <div className="step">
@@ -61,5 +70,5 @@ function StepLanguages({ data, onChange }) {
       </div>
     </div>
   )
-}
+})
 export default StepLanguages

@@ -1,14 +1,21 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 
 const empty = { institution: '', degree: '', field: '', start: '', end: '', current: false }
 
-function StepEducation({ data, onChange }) {
+const StepEducation = forwardRef(function StepEducation({ data, onChange }, ref) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
+  const [baseline, setBaseline] = useState(empty)
 
   const handle = (e) => {
     const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     setForm((p) => ({ ...p, [e.target.name]: v }))
+  }
+
+  const resetForm = () => {
+    setForm(empty)
+    setBaseline(empty)
+    setEditing(null)
   }
 
   const save = () => {
@@ -17,18 +24,35 @@ function StepEducation({ data, onChange }) {
       const updated = [...data]
       updated[editing] = form
       onChange(updated)
-      setEditing(null)
     } else {
       onChange([...data, form])
     }
-    setForm(empty)
+    resetForm()
   }
 
   const edit = (i) => {
     setEditing(i)
     setForm(data[i])
+    setBaseline(data[i])
   }
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => JSON.stringify(form) !== JSON.stringify(baseline),
+    commit: () => {
+      if (!form.institution?.trim()) return false
+      if (editing !== null) {
+        const updated = [...data]
+        updated[editing] = form
+        onChange(updated)
+      } else {
+        onChange([...data, form])
+      }
+      resetForm()
+      return true
+    },
+    discard: () => resetForm()
+  }))
 
   return (
     <div className="step">
@@ -106,7 +130,7 @@ function StepEducation({ data, onChange }) {
               name="end"
               value={form.end}
               onChange={handle}
-              placeholder="2024"
+              placeholder={form.current ? '' : '2024'}
               disabled={form.current}
             />
           </div>
@@ -127,6 +151,7 @@ function StepEducation({ data, onChange }) {
               onClick={() => {
                 setEditing(null)
                 setForm(empty)
+                setBaseline(empty)
               }}
             >
               Cancelar
@@ -136,6 +161,6 @@ function StepEducation({ data, onChange }) {
       </div>
     </div>
   )
-}
+})
 
 export default StepEducation

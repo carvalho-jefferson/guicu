@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiEdit2, FiX } from 'react-icons/fi'
 
 const empty = { name: '', tech: '', link: '', bullets: [], linkDisplay: 'below' }
 
-function StepProjects({ data, onChange }) {
+const StepProjects = forwardRef(function StepProjects({ data, onChange }, ref) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
+  const [baseline, setBaseline] = useState(empty)
   const [bulletInput, setBulletInput] = useState('')
   const [editingBulletIdx, setEditingBulletIdx] = useState(null)
 
   const handle = (e) => {
     const { name, value } = e.target
-    // Remove espaços do campo de link
     const newValue = name === 'link' ? value.replace(/\s/g, '') : value
     setForm((prev) => ({ ...prev, [name]: newValue }))
   }
@@ -19,7 +19,6 @@ function StepProjects({ data, onChange }) {
   const addBullet = () => {
     if (!bulletInput.trim()) return
     if (editingBulletIdx !== null) {
-      // modo edição: substitui o bullet existente
       const updated = [...(form.bullets || [])]
       updated[editingBulletIdx] = bulletInput.trim()
       setForm((p) => ({ ...p, bullets: updated }))
@@ -45,33 +44,66 @@ function StepProjects({ data, onChange }) {
     if (editingBulletIdx === i) cancelBulletEdit()
   }
 
+  const resetForm = () => {
+    setForm(empty)
+    setBaseline(empty)
+    setBulletInput('')
+    setEditingBulletIdx(null)
+    setEditing(null)
+  }
+
   const save = () => {
     if (!form.name.trim()) return
     if (editing !== null) {
       const updated = [...data]
       updated[editing] = { ...form }
       onChange(updated)
-      setEditing(null)
     } else {
       onChange([...data, { ...form }])
     }
-    setForm(empty)
-    setBulletInput('')
+    resetForm()
   }
 
   const edit = (i) => {
+    const loaded = { ...data[i], bullets: data[i].bullets || [] }
     setEditing(i)
-    setForm({ ...data[i], bullets: data[i].bullets || [] })
+    setForm(loaded)
+    setBaseline(loaded)
     setBulletInput('')
   }
 
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
-  const cancel = () => {
-    setEditing(null)
-    setForm(empty)
-    setBulletInput('')
-    setEditingBulletIdx(null)
-  }
+  const cancel = () => resetForm()
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () =>
+      bulletInput.trim() !== '' ||
+      editingBulletIdx !== null ||
+      JSON.stringify(form) !== JSON.stringify(baseline),
+    commit: () => {
+      let bullets = form.bullets || []
+      if (bulletInput.trim()) {
+        if (editingBulletIdx !== null) {
+          bullets = [...bullets]
+          bullets[editingBulletIdx] = bulletInput.trim()
+        } else {
+          bullets = [...bullets, bulletInput.trim()]
+        }
+      }
+      const finalForm = { ...form, bullets }
+      if (!finalForm.name?.trim()) return false
+      if (editing !== null) {
+        const updated = [...data]
+        updated[editing] = finalForm
+        onChange(updated)
+      } else {
+        onChange([...data, finalForm])
+      }
+      resetForm()
+      return true
+    },
+    discard: () => resetForm()
+  }))
 
   return (
     <div className="step">
@@ -231,6 +263,6 @@ function StepProjects({ data, onChange }) {
       </div>
     </div>
   )
-}
+})
 
 export default StepProjects

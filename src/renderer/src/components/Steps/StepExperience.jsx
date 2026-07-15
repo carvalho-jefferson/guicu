@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
 
 const empty = { company: '', role: '', start: '', end: '', current: false, bullets: [] }
 
-function StepExperience({ data, onChange }) {
+const StepExperience = forwardRef(function StepExperience({ data, onChange }, ref) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
+  const [baseline, setBaseline] = useState(empty)
   const [bulletInput, setBulletInput] = useState('')
   const [editingBulletIdx, setEditingBulletIdx] = useState(null)
 
@@ -17,7 +18,6 @@ function StepExperience({ data, onChange }) {
   const addBullet = () => {
     if (!bulletInput.trim()) return
     if (editingBulletIdx !== null) {
-      // modo edição: substitui o bullet existente
       const updated = [...(form.bullets || [])]
       updated[editingBulletIdx] = bulletInput.trim()
       setForm((p) => ({ ...p, bullets: updated }))
@@ -43,30 +43,66 @@ function StepExperience({ data, onChange }) {
     if (editingBulletIdx === i) cancelBulletEdit()
   }
 
+  const resetForm = () => {
+    setForm(empty)
+    setBaseline(empty)
+    setBulletInput('')
+    setEditingBulletIdx(null)
+    setEditing(null)
+  }
+
   const save = () => {
     if (!form.company || !form.role) return
     if (editing !== null) {
       const u = [...data]
       u[editing] = form
       onChange(u)
-      setEditing(null)
-    } else onChange([...data, form])
-    setForm(empty)
-    setBulletInput('')
+    } else {
+      onChange([...data, form])
+    }
+    resetForm()
   }
 
   const edit = (i) => {
+    const loaded = { ...empty, ...data[i], bullets: data[i].bullets || [] }
     setEditing(i)
-    setForm({ ...empty, ...data[i], bullets: data[i].bullets || [] })
-    setBulletInput('')
-  }
-  const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
-  const cancel = () => {
-    setEditing(null)
-    setForm(empty)
+    setForm(loaded)
+    setBaseline(loaded)
     setBulletInput('')
     setEditingBulletIdx(null)
   }
+  const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
+  const cancel = () => resetForm()
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () =>
+      bulletInput.trim() !== '' ||
+      editingBulletIdx !== null ||
+      JSON.stringify(form) !== JSON.stringify(baseline),
+    commit: () => {
+      let bullets = form.bullets || []
+      if (bulletInput.trim()) {
+        if (editingBulletIdx !== null) {
+          bullets = [...bullets]
+          bullets[editingBulletIdx] = bulletInput.trim()
+        } else {
+          bullets = [...bullets, bulletInput.trim()]
+        }
+      }
+      const finalForm = { ...form, bullets }
+      if (!finalForm.company?.trim() || !finalForm.role?.trim()) return false
+      if (editing !== null) {
+        const u = [...data]
+        u[editing] = finalForm
+        onChange(u)
+      } else {
+        onChange([...data, finalForm])
+      }
+      resetForm()
+      return true
+    },
+    discard: () => resetForm()
+  }))
 
   return (
     <div className="step">
@@ -129,7 +165,7 @@ function StepExperience({ data, onChange }) {
               name="end"
               value={form.end}
               onChange={handle}
-              placeholder="Dez 2022"
+              placeholder={form.current ? '' : 'Dez 2022'}
               disabled={form.current}
             />
           </div>
@@ -203,5 +239,6 @@ function StepExperience({ data, onChange }) {
       </div>
     </div>
   )
-}
+})
+
 export default StepExperience
