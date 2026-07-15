@@ -828,6 +828,50 @@ textarea {
     background: #2d1a1a;
     color: #fc8181;
   }
+  /* Sobrescreve o tema manual (data-theme) por cima da preferência do sistema,
+   para os elementos com cor fixa que não usam variáveis CSS */
+
+  [data-theme='dark'] .tag {
+    background: #1e3a5f;
+    color: #90cdf4;
+  }
+  [data-theme='dark'] .tag button {
+    color: #90cdf4;
+  }
+  [data-theme='light'] .tag {
+    background: #ebf4ff;
+    color: #2b6cb0;
+  }
+  [data-theme='light'] .tag button {
+    color: #2b6cb0;
+  }
+
+  /* Botões de adicionar/editar/remover nas etapas */
+  [data-theme='dark'] .btn-add {
+    background: #1e3a5f;
+    color: #90cdf4;
+  }
+  [data-theme='dark'] .btn-edit {
+    background: #2d2a1a;
+    color: #fbd38d;
+  }
+  [data-theme='dark'] .btn-remove {
+    background: #2d1a1a;
+    color: #fc8181;
+  }
+
+  [data-theme='light'] .btn-add {
+    background: #ebf4ff;
+    color: #2b6cb0;
+  }
+  [data-theme='light'] .btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  [data-theme='light'] .btn-remove {
+    background: #fff5f5;
+    color: #c53030;
+  }
 }
 .download-progress {
   margin-left: 8px;
