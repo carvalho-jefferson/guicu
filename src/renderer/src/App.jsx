@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import ProgressBar from './components/Wizard/ProgressBar'
 import StepPersonal from './components/Steps/StepPersonal'
 import StepSummary from './components/Steps/StepSummary'
@@ -71,6 +71,12 @@ function App() {
     // Executado apenas uma vez, na montagem do componente
     return !localStorage.getItem('guicu-onboarding')
   })
+
+  const stepRefs = useRef([])
+  const pendingNavRef = useRef(null)
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false)
+
+  const [showCommitErrorModal, setShowCommitErrorModal] = useState(false)
 
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
@@ -280,7 +286,7 @@ function App() {
     setValidationErrors([]) // some com os erros
   }
 
-  const next = () => {
+  const doNext = () => {
     if (step < STEPS.length - 1) {
       // Validações antes de avançar
       const errors = []
@@ -319,7 +325,7 @@ function App() {
     }
   }
 
-  const back = () => {
+  const doBack = () => {
     if (showResume) {
       setShowResume(false)
     } else {
@@ -327,7 +333,7 @@ function App() {
     }
   }
 
-  const goToStep = (i) => {
+  const doGoToStep = (i) => {
     if (i > maxVisitedStep) return // bloqueia steps futuros
     setShowResume(false)
     setStep(i)
@@ -338,6 +344,47 @@ function App() {
     if (saveStatus === 'saved') return 'Salvo'
     if (saveStatus === 'error') return 'Erro ao salvar'
     return ''
+  }
+
+  const guardNav = (fn) => {
+    const ref = stepRefs.current[step]
+    if (ref?.hasUnsavedChanges?.()) {
+      pendingNavRef.current = fn
+      setShowUnsavedModal(true)
+    } else {
+      fn()
+    }
+  }
+
+  const next = () => guardNav(doNext)
+  const back = () => guardNav(doBack)
+  const goToStep = (i) => guardNav(() => doGoToStep(i))
+
+  const handleUnsavedSaveAndContinue = () => {
+    const ref = stepRefs.current[step]
+    const ok = ref?.commit ? ref.commit() : true
+    setShowUnsavedModal(false)
+    if (ok) {
+      const fn = pendingNavRef.current
+      pendingNavRef.current = null
+      fn?.()
+    } else {
+      pendingNavRef.current = null
+      setShowCommitErrorModal(true)
+    }
+  }
+
+  const handleUnsavedDiscardAndContinue = () => {
+    stepRefs.current[step]?.discard?.()
+    setShowUnsavedModal(false)
+    const fn = pendingNavRef.current
+    pendingNavRef.current = null
+    fn?.()
+  }
+
+  const handleUnsavedCancel = () => {
+    setShowUnsavedModal(false)
+    pendingNavRef.current = null
   }
 
   if (!loaded) return <div className="loading-screen">Carregando...</div>
@@ -354,29 +401,39 @@ function App() {
       data={resumeData.summary}
       onChange={(v) => updateData('summary', v)}
     />,
-    <StepSkills key="skills" data={resumeData.skills} onChange={(v) => updateData('skills', v)} />,
+    <StepSkills
+      key="skills"
+      ref={(el) => (stepRefs.current[2] = el)}
+      data={resumeData.skills}
+      onChange={(v) => updateData('skills', v)}
+    />,
     <StepExperience
       key="experience"
+      ref={(el) => (stepRefs.current[3] = el)}
       data={resumeData.experience}
       onChange={(v) => updateData('experience', v)}
     />,
     <StepProjects
       key="projects"
+      ref={(el) => (stepRefs.current[4] = el)}
       data={resumeData.projects}
       onChange={(v) => updateData('projects', v)}
     />,
     <StepEducation
       key="education"
+      ref={(el) => (stepRefs.current[5] = el)}
       data={resumeData.education}
       onChange={(v) => updateData('education', v)}
     />,
     <StepCertifications
       key="certifications"
+      ref={(el) => (stepRefs.current[6] = el)}
       data={resumeData.certifications}
       onChange={(v) => updateData('certifications', v)}
     />,
     <StepLanguages
       key="languages"
+      ref={(el) => (stepRefs.current[7] = el)}
       data={resumeData.languages}
       onChange={(v) => updateData('languages', v)}
     />
@@ -626,6 +683,45 @@ function App() {
         </div>
       )}
 
+      {showUnsavedModal && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: 440 }}>
+            <h2 style={{ marginTop: 0, color: 'var(--primary)' }}>Alterações não salvas</h2>
+            <p style={{ marginBottom: 24 }}>
+              Você iniciou o preenchimento de algum campo mas não o salvou. Deseja salvar as
+              alterações antes de continuar?
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button className="btn-primary" onClick={handleUnsavedSaveAndContinue}>
+                Salvar e continuar
+              </button>
+              <button className="btn-secondary" onClick={handleUnsavedDiscardAndContinue}>
+                Descartar alterações e continuar
+              </button>
+              <button className="btn-secondary" onClick={handleUnsavedCancel}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showCommitErrorModal && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: 400 }}>
+            <h2 style={{ marginTop: 0, color: '#a91a1a' }}>Não foi possível salvar</h2>
+            <p style={{ marginBottom: 24 }}>
+              Preencha os campos obrigatórios desta etapa antes de continuar.
+            </p>
+            <button
+              className="btn-primary"
+              style={{ width: '100%' }}
+              onClick={() => setShowCommitErrorModal(false)}
+            >
+              Entendi
+            </button>
+          </div>
+        </div>
+      )}
       {showOnboarding && <OnboardingModal onClose={closeOnboarding} />}
     </>
   )

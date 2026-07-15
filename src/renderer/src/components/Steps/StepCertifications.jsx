@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 
 const empty = { name: '', issuer: '', date: '', link: '', linkDisplay: 'below' }
 
-function StepCertifications({ data, onChange }) {
+const StepCertifications = forwardRef(function StepCertifications({ data, onChange }, ref) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(empty)
+  const [baseline, setBaseline] = useState(empty)
 
   const handle = (e) => {
     const { name, value } = e.target
     const newValue = name === 'link' ? value.replace(/\s/g, '') : value
     setForm((p) => ({ ...p, [name]: newValue }))
+  }
+
+  const resetForm = () => {
+    setForm(empty)
+    setBaseline(empty)
+    setEditing(null)
   }
 
   const save = () => {
@@ -18,18 +25,35 @@ function StepCertifications({ data, onChange }) {
       const u = [...data]
       u[editing] = form
       onChange(u)
-      setEditing(null)
     } else {
       onChange([...data, form])
     }
-    setForm(empty)
+    resetForm()
   }
 
   const edit = (i) => {
     setEditing(i)
     setForm(data[i])
+    setBaseline(data[i])
   }
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => JSON.stringify(form) !== JSON.stringify(baseline),
+    commit: () => {
+      if (!form.name?.trim()) return false
+      if (editing !== null) {
+        const u = [...data]
+        u[editing] = form
+        onChange(u)
+      } else {
+        onChange([...data, form])
+      }
+      resetForm()
+      return true
+    },
+    discard: () => resetForm()
+  }))
 
   return (
     <div className="step">
@@ -142,6 +166,7 @@ function StepCertifications({ data, onChange }) {
               onClick={() => {
                 setEditing(null)
                 setForm(empty)
+                setBaseline(empty)
               }}
             >
               Cancelar
@@ -151,6 +176,6 @@ function StepCertifications({ data, onChange }) {
       </div>
     </div>
   )
-}
+})
 
 export default StepCertifications
