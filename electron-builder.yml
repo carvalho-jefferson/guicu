@@ -19,7 +19,7 @@ publish:
 win:
   executableName: Guicu
   icon: resources/icon.ico
-  artifactName: Guicu-${version}.${ext}
+  artifactName: Guicu-Windows.${ext}
   target:
     - target: nsis
       arch: [x64]
@@ -45,6 +45,7 @@ nsis:
 
 mac:
   icon: resources/icon.icns
+  artifactName: Guicu-macOS.${ext}
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
@@ -61,8 +62,9 @@ linux:
     - deb
   maintainer: Jefferson Carvalho
   category: Utility
+  artifactName: Guicu-Linux.${ext}
 
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: Guicu-Linux.${ext}
 
 npmRebuild: false
