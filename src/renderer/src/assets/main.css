@@ -62,6 +62,28 @@
     --accent: #4a4545;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
+  /* Temas via menu de configurações */
+  :root[data-theme='dark'] {
+    --bg: #0f1419;
+    --surface: #1a2332;
+    --surface2: #141e2b;
+    --border: #2d3748;
+    --text: #e2e8f0;
+    --muted: #a0aec0;
+    --accent: #4a4545;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  :root[data-theme='light'] {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface2: #f7fafc;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --muted: #4a5568;
+    --accent: #363333;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
 }
 
 * {
@@ -319,7 +341,7 @@ textarea {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 20px 0;
+  padding: 20px 0 12px;
   flex-shrink: 0;
   overflow-y: auto;
 }
@@ -350,6 +372,74 @@ textarea {
 .sidebar-step.active {
   background: var(--surface2);
   border-left-color: var(--accent);
+}
+.sidebar-settings-btn {
+  margin-top: auto;
+  align-self: center;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+.sidebar-settings-btn:hover {
+  color: var(--accent);
+  background: var(--surface2);
+}
+.settings-section {
+  margin-bottom: 20px;
+}
+.settings-section-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.theme-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+}
+.settings-about-text {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.settings-version {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.settings-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.settings-github-link:hover {
+  text-decoration: underline;
 }
 .step-dot {
   width: 26px;
@@ -1010,7 +1100,6 @@ textarea {
 
 /* Documento do currículo - sempre tema claro (para impressão) */
 .resume-doc {
-
   --r-accent: #1a1a2e;
   --r-header-align: left;
   --r-header-weight: 700;
@@ -1186,7 +1275,6 @@ a.r-item-title[href] {
   font-size: 11px;
   color: #4a5568;
 }
-
 
 .ats-item {
   display: flex;
