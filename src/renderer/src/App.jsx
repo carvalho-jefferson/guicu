@@ -450,6 +450,8 @@ function App() {
       ref={(el) => (stepRefs.current[7] = el)}
       data={resumeData.languages}
       onChange={(v) => updateData('languages', v)}
+      languageDisplay={resumeData.languageDisplay}
+      onLanguageDisplayChange={(lang) => updateData('languageDisplay', lang)}
     />
   ]
 

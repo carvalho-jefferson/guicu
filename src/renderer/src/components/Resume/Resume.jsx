@@ -31,6 +31,25 @@ import {
   FiChevronDown
 } from 'react-icons/fi'
 
+const CEFR_LABELS = {
+  pt: {
+    A1: 'Iniciante',
+    A2: 'Básico',
+    B1: 'Intermediário',
+    B2: 'Intermediário avançado',
+    C1: 'Avançado',
+    C2: 'Proficiente'
+  },
+  en: {
+    A1: 'Beginner',
+    A2: 'Elementary',
+    B1: 'Intermediate',
+    B2: 'Upper Intermediate',
+    C1: 'Advanced',
+    C2: 'Proficient'
+  }
+}
+
 function getScoreBand(score) {
   if (score >= 85) return { label: 'Excelente', color: '#38a169', bg: '#f0fff4', border: '#9ae6b4' }
   if (score >= 70) return { label: 'Bom', color: '#2b6cb0', bg: '#ebf8ff', border: '#90cdf4' }
@@ -735,6 +754,9 @@ function Resume({ resumeData, onBack, onUpdate }) {
     (s) => typeof s === 'object' && s.category && s.category.trim() !== ''
   )
 
+  const displayLang = resumeData.languageDisplay || 'pt'
+  const cefrMap = displayLang === 'en' ? CEFR_LABELS.en : CEFR_LABELS.pt
+
   return (
     <div className="resume-page">
       {/* Toolbar */}
@@ -1202,11 +1224,11 @@ function Resume({ resumeData, onBack, onUpdate }) {
                       value={sectionTitles.languages}
                       onChange={(v) => updateSectionTitle('languages', v)}
                     />
-                    <div className="r-skills-plain">
+                    <div>
                       {languages.map((l, i) => (
-                        <span key={i} className="r-skill">
-                          {l.language} - {l.level}
-                        </span>
+                        <div key={i} className="r-skills-items">
+                          {l.language} — {cefrMap[l.level] || l.level} ({l.level} CEFR)
+                        </div>
                       ))}
                     </div>
                   </div>
