@@ -13,6 +13,7 @@ import CustomSelect from './components/common/CustomSelect'
 import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
 import { DEFAULT_DESIGN } from './utils/designTokens'
 import './assets/main.css'
+import ChangelogModal from './components/ChangelogModal'
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -73,6 +74,10 @@ function App() {
     // Executado apenas uma vez, na montagem do componente
     return !localStorage.getItem('guicu-onboarding')
   })
+
+  const [showChangelog, setShowChangelog] = useState(
+    () => localStorage.getItem('guicu-changelog-version') !== (__APP_VERSION__ || '0.0.0')
+  )
 
   const stepRefs = useRef([])
   const pendingNavRef = useRef(null)
@@ -196,6 +201,11 @@ function App() {
   const closeOnboarding = () => {
     localStorage.setItem('guicu-onboarding', 'true')
     setShowOnboarding(false)
+  }
+
+  const closeChangelog = () => {
+    localStorage.setItem('guicu-changelog-version', __APP_VERSION__)
+    setShowChangelog(false)
   }
 
   useEffect(() => {
@@ -813,6 +823,7 @@ function App() {
         </div>
       )}
       {showOnboarding && <OnboardingModal onClose={closeOnboarding} />}
+      {showChangelog && <ChangelogModal onClose={closeChangelog} />}
     </>
   )
 }
