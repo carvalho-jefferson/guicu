@@ -13,6 +13,7 @@ import CustomSelect from './components/common/CustomSelect'
 import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
 import { DEFAULT_DESIGN } from './utils/designTokens'
 import './assets/main.css'
+import ChangelogModal from './components/ChangelogModal'
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -72,6 +73,12 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(() => {
     // Executado apenas uma vez, na montagem do componente
     return !localStorage.getItem('guicu-onboarding')
+  })
+
+  const [showChangelog, setShowChangelog] = useState(() => {
+    // Só exibe changelog para quem já conhece o app (já fechou o onboarding).
+    if (localStorage.getItem('guicu-onboarding') !== 'true') return false
+    return localStorage.getItem('guicu-changelog-version') !== __APP_VERSION__
   })
 
   const stepRefs = useRef([])
@@ -196,6 +203,11 @@ function App() {
   const closeOnboarding = () => {
     localStorage.setItem('guicu-onboarding', 'true')
     setShowOnboarding(false)
+  }
+
+  const closeChangelog = () => {
+    localStorage.setItem('guicu-changelog-version', __APP_VERSION__)
+    setShowChangelog(false)
   }
 
   useEffect(() => {
@@ -815,6 +827,7 @@ function App() {
         </div>
       )}
       {showOnboarding && <OnboardingModal onClose={closeOnboarding} />}
+      {showChangelog && <ChangelogModal onClose={closeChangelog} />}
     </>
   )
 }
