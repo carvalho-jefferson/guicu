@@ -1,5 +1,17 @@
 function StepSummary({ data, onChange }) {
-  const wordCount = data.trim() === '' ? 0 : data.trim().split(/\s+/).length
+  const MAX_WORDS = 80
+  const wordCount = data.trim() === '' ? 0 : data.trim().split(/\s+/).filter(Boolean).length
+  const isAtLimit = wordCount === MAX_WORDS
+
+  const handleChange = (e) => {
+    const newValue = e.target.value
+    const newWordCount =
+      newValue.trim() === '' ? 0 : newValue.trim().split(/\s+/).filter(Boolean).length
+    if (newWordCount <= MAX_WORDS) {
+      onChange(newValue)
+    }
+  }
+
   return (
     <div className="step">
       <h2>Resumo Profissional</h2>
@@ -12,16 +24,18 @@ function StepSummary({ data, onChange }) {
         <label>Resumo *</label>
         <textarea
           value={data}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleChange}
           placeholder={
-            'Ex.: Desenvolvedor Backend com 4 anos de experiência em Python e Node.js, especializado em arquitetura de APIs RESTful e microsserviços. Sólida vivência com bancos de dados relacionais e não relacionais, containerização com Docker e deploy em ambientes cloud (AWS). Interesse em atuar como Desenvolvedor Backend Pleno para contribuir com sistemas escaláveis...'
+            'Ex.: Desenvolvedor Backend com 4 anos de experiência em Python e Node.js, especializado em arquitetura de APIs RESTful e microsserviços. Sólida vivência com bancos de dados relacionais e não relacionais, containerização com Docker e deploy em ambientes cloud (AWS). Interesse em atuar como Desenvolvedor Backend Pleno...'
           }
           rows={6}
         />
-        <span className={`word-count ${wordCount < 40 ? 'warn' : 'good'}`}>
-          {wordCount < 40
-            ? `${wordCount} palavras — recomendado pelo menos 40`
-            : `${wordCount} palavras — ótimo para ATS`}
+        <span className={`word-count ${isAtLimit ? 'good' : wordCount < 40 ? 'warn' : 'good'}`}>
+          {isAtLimit
+            ? `${wordCount}/${MAX_WORDS} palavras — limite atingido`
+            : wordCount < 40
+              ? `${wordCount} palavras — recomendado pelo menos 40`
+              : `${wordCount} palavras — ótimo para ATS`}
         </span>
       </div>
     </div>
