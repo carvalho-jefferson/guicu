@@ -75,9 +75,11 @@ function App() {
     return !localStorage.getItem('guicu-onboarding')
   })
 
-  const [showChangelog, setShowChangelog] = useState(
-    () => localStorage.getItem('guicu-changelog-version') !== (__APP_VERSION__ || '0.0.0')
-  )
+  const [showChangelog, setShowChangelog] = useState(() => {
+    // Só exibe changelog para quem já conhece o app (já fechou o onboarding).
+    if (localStorage.getItem('guicu-onboarding') !== 'true') return false
+    return localStorage.getItem('guicu-changelog-version') !== __APP_VERSION__
+  })
 
   const stepRefs = useRef([])
   const pendingNavRef = useRef(null)
