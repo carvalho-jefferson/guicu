@@ -14,6 +14,7 @@ import { DEFAULT_SECTION_TITLES } from './i18n/resumeLabels'
 import { DEFAULT_DESIGN } from './utils/designTokens'
 import './assets/main.css'
 import ChangelogModal from './components/ChangelogModal'
+import qrCode from './assets/qrcode-apoie-o-projeto.png'
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -103,6 +104,29 @@ function App() {
 
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('guicu-theme') || 'system')
+
+  const [copyFeedback, setCopyFeedback] = useState(false)
+  const PIX_KEY = '2ad04c77-360e-4aea-aec2-604319d750e6'
+
+  const [settingsPage, setSettingsPage] = useState('main') // 'main' ou 'about'
+
+  const handleCopyPix = async () => {
+    try {
+      await navigator.clipboard.writeText(PIX_KEY)
+      setCopyFeedback(true)
+      setTimeout(() => setCopyFeedback(false), 2000)
+    } catch {
+      // fallback para navegadores mais antigos
+      const textarea = document.createElement('textarea')
+      textarea.value = PIX_KEY
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      setCopyFeedback(true)
+      setTimeout(() => setCopyFeedback(false), 2000)
+    }
+  }
 
   useEffect(() => {
     if (theme === 'system') {
@@ -758,71 +782,197 @@ function App() {
         </div>
       )}
       {showSettingsModal && (
-        <div className="modal-overlay" onClick={() => setShowSettingsModal(false)}>
+        <div
+          className="modal-overlay"
+          onClick={() => {
+            setShowSettingsModal(false)
+            setSettingsPage('main')
+          }}
+        >
           <div
             className="modal-content"
-            style={{ maxWidth: 440 }}
+            style={{ maxWidth: 440, position: 'relative' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginTop: 0, color: 'var(--primary)' }}>Configurações</h2>
+            {/* Página principal */}
+            {settingsPage === 'main' && (
+              <>
+                <h2 style={{ marginTop: 0, color: 'var(--primary)' }}>Configurações</h2>
 
-            <div className="settings-section">
-              <h3 className="settings-section-title">Aparência</h3>
-              <div className="theme-options">
-                <label className="theme-option">
-                  <input
-                    type="radio"
-                    name="theme"
-                    checked={theme === 'system'}
-                    onChange={() => setTheme('system')}
-                  />
-                  Padrão do sistema
-                </label>
-                <label className="theme-option">
-                  <input
-                    type="radio"
-                    name="theme"
-                    checked={theme === 'light'}
-                    onChange={() => setTheme('light')}
-                  />
-                  Claro
-                </label>
-                <label className="theme-option">
-                  <input
-                    type="radio"
-                    name="theme"
-                    checked={theme === 'dark'}
-                    onChange={() => setTheme('dark')}
-                  />
-                  Escuro
-                </label>
-              </div>
-            </div>
+                {/* Aparência */}
+                <div className="settings-section">
+                  <h3 className="settings-section-title">Aparência</h3>
+                  <div className="theme-options">
+                    <label className="theme-option">
+                      <input
+                        type="radio"
+                        name="theme"
+                        checked={theme === 'system'}
+                        onChange={() => setTheme('system')}
+                      />
+                      Padrão do sistema
+                    </label>
+                    <label className="theme-option">
+                      <input
+                        type="radio"
+                        name="theme"
+                        checked={theme === 'light'}
+                        onChange={() => setTheme('light')}
+                      />
+                      Claro
+                    </label>
+                    <label className="theme-option">
+                      <input
+                        type="radio"
+                        name="theme"
+                        checked={theme === 'dark'}
+                        onChange={() => setTheme('dark')}
+                      />
+                      Escuro
+                    </label>
+                  </div>
+                </div>
 
-            <div className="settings-section">
-              <h3 className="settings-section-title">Sobre</h3>
-              <p className="settings-about-text">
-                Guicu — seu currículo guiado. Crie, edite, analise e exporte currículos offline, com
-                total privacidade.
-              </p>
-              <p className="settings-version">Versão {__APP_VERSION__}</p>
-              <a
-                href="https://github.com/carvalho-jefferson/guicu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="settings-github-link"
-              >
-                <FiGithub size={16} /> Ver repositório no GitHub
-              </a>
-            </div>
+                {/* Sobre (agora conteúdo diretamente visível) */}
+                <div className="settings-section">
+                  <h3 className="settings-section-title">Sobre</h3>
+                  <p className="settings-about-text">
+                    Guicu — seu currículo guiado. Crie, edite, analise e exporte currículos offline,
+                    com total privacidade.
+                  </p>
+                  <p className="settings-version">Versão {__APP_VERSION__}</p>
+                  <a
+                    href="https://github.com/carvalho-jefferson/guicu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="settings-github-link"
+                  >
+                    <FiGithub size={16} /> Ver repositório no GitHub
+                  </a>
+                </div>
 
-            <button
-              className="btn-primary"
-              style={{ width: '100%', marginTop: 8 }}
-              onClick={() => setShowSettingsModal(false)}
-            >
-              Fechar
-            </button>
+                {/* Apoie o projeto */}
+                <div
+                  className="settings-section"
+                  onClick={() => setSettingsPage('support')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <h3
+                    className="settings-section-title"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
+                  >
+                    <span>
+                      Apoie o projeto
+                      <span
+                        className="heart-emoji"
+                        style={{ display: 'inline-block', marginLeft: 4 }}
+                      >
+                        💚
+                      </span>
+                    </span>
+                    <span style={{ fontSize: 18, transition: 'transform 0.2s' }}>›</span>
+                  </h3>
+                </div>
+
+                <button
+                  className="btn-primary"
+                  style={{ width: '100%', marginTop: 8 }}
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  Fechar
+                </button>
+              </>
+            )}
+
+            {/* Subpágina Apoie o projeto */}
+            {settingsPage === 'support' && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                  <button
+                    onClick={() => setSettingsPage('main')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 4,
+                      marginRight: 8,
+                      color: 'var(--text)',
+                      fontSize: 18
+                    }}
+                    title="Voltar"
+                  >
+                    ←
+                  </button>
+                  <h2 style={{ margin: 0, color: 'var(--primary)' }}>
+                    Apoie o projeto <span className="heart-emoji">💚</span>
+                  </h2>
+                </div>
+
+                <p className="settings-about-text">
+                  Se este projeto foi útil para você ou contribuiu para a conquista do seu emprego,
+                  considere fazer uma doação de qualquer valor via PIX. Sua contribuição ajuda a
+                  manter o projeto gratuito, de código aberto e em constante evolução.
+                </p>
+
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginTop: 12 }}>
+                  {/* Coluna esquerda: chave + botão copiar */}
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>
+                      Chave PIX (aleatória):
+                    </p>
+                    <code
+                      style={{
+                        display: 'block',
+                        background: 'var(--surface2)',
+                        padding: '8px 10px',
+                        borderRadius: 6,
+                        fontSize: 12,
+                        wordBreak: 'break-all',
+                        marginBottom: 8
+                      }}
+                    >
+                      {PIX_KEY}
+                    </code>
+                    <button
+                      className="btn-secondary"
+                      style={{ padding: '6px 12px', fontSize: 12, width: '100%' }}
+                      onClick={handleCopyPix}
+                    >
+                      {copyFeedback ? '✅ Copiada!' : 'Copiar chave'}
+                    </button>
+                  </div>
+
+                  {/* Coluna direita: QR Code */}
+                  <div style={{ flexShrink: 0 }}>
+                    <img
+                      src={qrCode}
+                      alt="QR Code PIX"
+                      style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: 8,
+                        border: '1px solid var(--border)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  className="btn-secondary"
+                  style={{ width: '100%', marginTop: 24 }}
+                  onClick={() => setSettingsPage('main')}
+                >
+                  Voltar
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
