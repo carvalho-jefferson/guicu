@@ -19,6 +19,13 @@ const CHANGELOG = {
       'Correção da aparência de habilidades sem categoria — agora se transformam em tópicos',
       'A partir desta versão, os nomes dos executáveis serão padronizados para cada sistema operacional'
     ]
+  },
+  '1.6.1': {
+    title: 'Novidades da versão 1.6.1 ✨',
+    items: [
+      'Aparência dos subtítulos melhorada — removido o negrito pesado, tornando o visual mais moderno',
+      'Renomeada a penúltima seção para "Certificações e Cursos"'
+    ]
   }
 }
 
