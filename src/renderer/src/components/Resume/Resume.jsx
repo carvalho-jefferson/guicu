@@ -511,17 +511,22 @@ function Resume({ resumeData, onBack, onUpdate }) {
           return acc
         }, {})
         Object.entries(grouped).forEach(([cat, items]) => {
-          children.push(
-            new Paragraph({
-              children: [
-                ...(cat !== 'Geral'
-                  ? [new TextRun({ text: `${cat}: `, bold: true, size: 22, color: '2d3748' })]
-                  : []),
-                new TextRun({ text: items.join(', '), size: 22, color: MUTED })
-              ],
-              spacing: { after: 60 }
-            })
-          )
+          if (cat !== 'Geral') {
+            // Categoria definida: exibe como "Categoria: item1, item2"
+            children.push(
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${cat}: `, bold: true, size: 22, color: '2d3748' }),
+                  new TextRun({ text: items.join(', '), size: 22, color: MUTED })
+                ],
+                spacing: { after: 60 }
+              })
+            )
+          } else {
+            // Sem categoria: cada habilidade vira um bullet
+            items.forEach((item) => children.push(bullet(item)))
+            // (O bullet já adiciona um Paragraph com bullet e espaçamento)
+          }
         })
       }
     }
@@ -1034,13 +1039,11 @@ function Resume({ resumeData, onBack, onUpdate }) {
                         </p>
                       ))
                     ) : (
-                      <div className="r-skills-plain">
+                      <ul className="r-bullets">
                         {skills.map((s, i) => (
-                          <span key={i} className="r-skill">
-                            {typeof s === 'string' ? s : s.name}
-                          </span>
+                          <li key={i}>{typeof s === 'string' ? s : s.name}</li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
                 )
