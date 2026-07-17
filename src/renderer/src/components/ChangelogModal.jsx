@@ -11,11 +11,12 @@ const CHANGELOG = {
     title: 'Novidades da versão 1.6.0 ✨',
     items: [
       'Aparência geral aprimorada',
-      'Adicionado um menu de configurações',
       'Níveis de idioma agora seguem o padrão Europeu CEFR (A1 a C2)',
+      'Adicionados um menu de configurações e uma página de apoio ao projeto',
       'Seletor bilíngue (PT/EN) nos idiomas — currículo pronto para vagas internacionais',
       'Ajuste da aparência da seção de idiomas. Agora seguem o mesmo estilo dos outros elementos do currículo — removida a tarja cinza',
       'Adicionada validação para impedir prosseguir sem ter salvado os campos já preenchidos',
+      'Correção da aparência de habilidades sem categoria — agora se transformam em tópicos',
       'A partir desta versão, o nome dos executáveis serão padronizados para cada sistema operacional'
     ]
   }
