@@ -390,9 +390,7 @@ function App() {
   }
 
   const getSaveStatusText = () => {
-    if (saveStatus === 'saving') return 'Salvando...'
     if (saveStatus === 'saved') return 'Salvo'
-    if (saveStatus === 'error') return 'Erro ao salvar'
     return ''
   }
 
