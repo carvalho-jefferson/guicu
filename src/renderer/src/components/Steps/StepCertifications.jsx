@@ -57,7 +57,7 @@ const StepCertifications = forwardRef(function StepCertifications({ data, onChan
 
   return (
     <div className="step">
-      <h2>Cursos e Certificações</h2>
+      <h2>Certificações e Cursos</h2>
       <p className="step-desc">
         Adicione aqui cursos livres, bootcamps, treinamentos e certificações formais. Eles aumentam
         a credibilidade no ATS.

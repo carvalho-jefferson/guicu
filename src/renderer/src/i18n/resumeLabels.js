@@ -8,7 +8,7 @@ export const DEFAULT_SECTION_TITLES = {
   experience: 'Experiência Profissional',
   projects: 'Projetos',
   education: 'Formação Acadêmica',
-  certifications: 'Cursos e Certificações',
+  certifications: 'Certificações e Cursos',
   languages: 'Idiomas'
 }
 
