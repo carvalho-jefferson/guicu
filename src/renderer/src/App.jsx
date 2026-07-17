@@ -390,8 +390,7 @@ function App() {
   }
 
   const getSaveStatusText = () => {
-    if (saveStatus === 'saved') return 'Salvo'
-    return ''
+    return 'Salvo'
   }
 
   const guardNav = (fn) => {
@@ -555,7 +554,7 @@ function App() {
             )}
 
             <span
-              className="save-status"
+              className={`save-status${saveStatus === 'saved' ? '' : ' hidden'}`}
               title={lastSaveTime ? `Último salvamento: ${lastSaveTime.toLocaleString()}` : ''}
             >
               {getSaveStatusText()}

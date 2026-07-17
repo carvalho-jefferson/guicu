@@ -334,6 +334,9 @@ textarea {
   text-align: center;
   white-space: nowrap;
 }
+.save-status.hidden {
+  visibility: hidden;
+}
 .btn-new {
   background: rgba(255, 255, 255, 0.15);
   color: white;
