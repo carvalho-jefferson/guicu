@@ -478,7 +478,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
               ? link(c.text, c.url, { size: 20, color: LIGHT })
               : new TextRun({ text: c.text, size: 20, color: LIGHT }),
             ...(i < contacts.length - 1
-              ? [new TextRun({ text: '   |   ', size: 20, color: LIGHT })]
+              ? [new TextRun({ text: '   ', size: 20, color: LIGHT })]
               : [])
           ]),
           alignment: HEADER_ALIGNMENT,
@@ -678,22 +678,23 @@ function Resume({ resumeData, onBack, onUpdate }) {
     const buildLanguages = () => {
       if (languages.length > 0) {
         children.push(sectionTitle(sectionTitles.languages.toUpperCase()))
-        children.push(
-          new Paragraph({
-            children: languages.map(
-              (l, i) =>
+        const displayLang = resumeData.languageDisplay || 'pt'
+        const cefrMap = CEFR_LABELS[displayLang] || CEFR_LABELS.pt
+        languages.forEach((l) => {
+          const desc = cefrMap[l.level] || l.level
+          children.push(
+            new Paragraph({
+              children: [
                 new TextRun({
-                  text:
-                    i < languages.length - 1
-                      ? `${l.language} (${l.level})  |  `
-                      : `${l.language} (${l.level})`,
+                  text: `${l.language} — ${desc} (${l.level} CEFR)`,
                   size: 22,
                   color: MUTED
                 })
-            ),
-            spacing: { after: 80 }
-          })
-        )
+              ],
+              spacing: { after: 60 }
+            })
+          )
+        })
       }
     }
 
