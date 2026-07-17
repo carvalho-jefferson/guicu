@@ -17,7 +17,7 @@ const CHANGELOG = {
       'Ajuste da aparência da seção de idiomas. Agora seguem o mesmo estilo dos outros elementos do currículo — removida a tarja cinza',
       'Adicionada validação para impedir prosseguir sem ter salvado os campos já preenchidos',
       'Correção da aparência de habilidades sem categoria — agora se transformam em tópicos',
-      'A partir desta versão, o nome dos executáveis serão padronizados para cada sistema operacional'
+      'A partir desta versão, os nomes dos executáveis serão padronizados para cada sistema operacional'
     ]
   }
 }
