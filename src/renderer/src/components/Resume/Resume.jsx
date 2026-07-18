@@ -1098,7 +1098,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
                             style={{
                               display: 'inline-flex',
                               flexWrap: 'wrap',
-                              alignItems: 'baseline'
+                              alignItems: 'center'
                             }}
                           >
                             {proj.link && proj.linkDisplay === 'hyperlink' ? (
@@ -1114,7 +1114,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
                             ) : (
                               <span className="r-item-title">{proj.name}</span>
                             )}
-                            {proj.tech && <span className="r-tech-inline">| {proj.tech}</span>}
+                            {proj.tech && <span className="r-tech-inline">{proj.tech}</span>}
                           </span>
                         </div>
                         {proj.link && proj.linkDisplay === 'below' && (
@@ -1182,7 +1182,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
                           <div
                             style={{
                               display: 'flex',
-                              alignItems: 'baseline',
+                              alignItems: 'center',
                               flexWrap: 'wrap',
                               gap: 4
                             }}
@@ -1200,11 +1200,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
                             ) : (
                               <span className="r-item-title">{cert.name}</span>
                             )}
-                            {cert.issuer && (
-                              <span style={{ color: '#4a5568', fontSize: 11 }}>
-                                | {cert.issuer}
-                              </span>
-                            )}
+                            {cert.issuer && <span className="r-issuer-inline">{cert.issuer}</span>}
                           </div>
                           {cert.date && <span className="r-date">{cert.date}</span>}
                         </div>
