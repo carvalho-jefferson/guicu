@@ -1060,7 +1060,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
                     {experience.map((exp, i) => (
                       <div key={i} className="r-item">
                         <div className="r-item-header">
-                          <strong className="r-item-title">{exp.role}</strong>
+                          <div className="r-item-title">{exp.role}</div>
                           <span className="r-date">
                             {exp.start} – {exp.current ? 'Atual' : exp.end}
                           </span>
@@ -1149,13 +1149,13 @@ function Resume({ resumeData, onBack, onUpdate }) {
                     {education.map((edu, i) => (
                       <div key={i} className="r-item">
                         <div className="r-item-header">
-                          <strong className="r-item-title">
+                          <span className="r-item-title">
                             {' '}
                             {edu.degree && edu.field && `${edu.degree} em ${edu.field}`}
                             {edu.degree && !edu.field && edu.degree}
                             {!edu.degree && edu.field && edu.field}
                             {!edu.degree && !edu.field && edu.institution}
-                          </strong>
+                          </span>
                           <span className="r-date">
                             {edu.start} – {edu.current ? 'Cursando' : edu.end}
                           </span>
