@@ -1628,3 +1628,35 @@ button:active {
     transform: scale(1);
   }
 }
+
+/* Pílula de ajuda com gradiente em movimento */
+.help-pill {
+  position: relative;
+  display: inline-block;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  color: var(--muted);
+
+  background: linear-gradient(90deg, var(--surface2), #c0ae78, var(--surface2));
+  background-size: 300% 100%;
+  animation: slide-gradient 9s ease-in-out infinite;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+@keyframes slide-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.help-pill:hover {
+  color: #dedede;
+  background: #8d8775;
+  border-color: var(--primary-h);
+}

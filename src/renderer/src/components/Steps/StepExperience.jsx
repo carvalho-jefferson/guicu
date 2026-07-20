@@ -1,5 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
+import { experienceBulletTemplates } from '../../content/templates'
 
 const empty = { company: '', role: '', start: '', end: '', current: false, bullets: [] }
 
@@ -73,6 +74,18 @@ const StepExperience = forwardRef(function StepExperience({ data, onChange }, re
   }
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
   const cancel = () => resetForm()
+
+  // Modelos de preenchimento
+  const [bulletTemplateIndex, setBulletTemplateIndex] = useState(0)
+
+  const handleHelp = () => {
+    const nextIndex = (bulletTemplateIndex + 1) % experienceBulletTemplates.length
+    setBulletTemplateIndex(nextIndex)
+    setForm((prev) => ({
+      ...prev,
+      bullets: [...(prev.bullets || []), experienceBulletTemplates[nextIndex]]
+    }))
+  }
 
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () =>
@@ -224,6 +237,17 @@ const StepExperience = forwardRef(function StepExperience({ data, onChange }, re
                 )}
               </div>
             )}
+            {/* Botão "Guicu, me ajuda!" */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+              <button
+                type="button"
+                className="help-pill"
+                onClick={handleHelp}
+                title="Preencher com um modelo de experiência (clique novamente para outra sugestão)"
+              >
+                Guicu, me ajuda!
+              </button>
+            </div>
           </div>
         </div>
         <div className="sub-form-actions">

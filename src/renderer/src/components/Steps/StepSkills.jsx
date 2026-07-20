@@ -1,5 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiHelpCircle, FiEdit2, FiX } from 'react-icons/fi'
+import { skillTemplates } from '../../content/templates'
 
 const StepSkills = forwardRef(function StepSkills({ data, onChange }, ref) {
   const [inputValue, setInputValue] = useState('')
@@ -90,6 +91,15 @@ const StepSkills = forwardRef(function StepSkills({ data, onChange }, ref) {
     ))
   }
 
+  // Modelos de preenchimento
+  const [skillTemplateIndex, setSkillTemplateIndex] = useState(0)
+
+  const handleHelp = () => {
+    const nextIndex = (skillTemplateIndex + 1) % skillTemplates.length
+    setSkillTemplateIndex(nextIndex)
+    setInputValue(skillTemplates[nextIndex])
+  }
+
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () => inputValue.trim() !== '',
     commit: () => {
@@ -131,6 +141,17 @@ const StepSkills = forwardRef(function StepSkills({ data, onChange }, ref) {
             />
             <button className="btn-add" onClick={addSkill}>
               {editingCategory !== null ? 'Salvar' : '+ Adicionar'}
+            </button>
+          </div>
+          {/* Botão "Guicu, me ajuda!" */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+            <button
+              type="button"
+              className="help-pill"
+              onClick={handleHelp}
+              title="Preencher com um modelo de habilidade (clique novamente para outra sugestão)"
+            >
+              Guicu, me ajuda!
             </button>
           </div>
         </div>
