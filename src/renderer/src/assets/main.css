@@ -1643,7 +1643,7 @@ button:active {
   user-select: none;
   color: var(--muted);
 
-  background: linear-gradient(90deg, var(--surface2), #c0ae78, var(--surface2));
+  background: linear-gradient(90deg, var(--surface2), #5a9f8d, var(--surface2));
   background-size: 300% 100%;
   animation: slide-gradient 9s ease-in-out infinite;
   transition: color 0.2s, border-color 0.2s;
@@ -1657,6 +1657,6 @@ button:active {
 
 .help-pill:hover {
   color: #dedede;
-  background: #8d8775;
+  background: #31574d;
   border-color: var(--primary-h);
 }
