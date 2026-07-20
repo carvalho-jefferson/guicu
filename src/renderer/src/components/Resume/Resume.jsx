@@ -636,7 +636,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
       personal.phone && { text: personal.phone },
       personal.email && { text: personal.email, url: `mailto:${personal.email}` },
       personal.linkedin && { text: personal.linkedin, url: personal.linkedin },
-      personal.github && { text: personal.github, url: personal.github }
+      personal.website && { text: personal.website, url: personal.website }
     ].filter(Boolean)
 
     if (contacts.length > 0) {
@@ -1158,24 +1158,24 @@ function Resume({ resumeData, onBack, onUpdate }) {
                     {personal.linkedin}
                   </a>
                 )}
-                {personal.github && (
+                {personal.website && (
                   <a
                     href={
-                      personal.github.startsWith('http')
-                        ? personal.github
-                        : `https://${personal.github}`
+                      personal.website.startsWith('http')
+                        ? personal.website
+                        : `https://${personal.website}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: 'inherit', textDecoration: 'none' }}
                   >
                     {design.showIcons &&
-                      (isGithubUrl(personal.github) ? (
+                      (isGithubUrl(personal.website) ? (
                         <FiGithub className="r-icon" size={11} />
                       ) : (
                         <FiGlobe className="r-icon" size={11} />
                       ))}
-                    {personal.github}
+                    {personal.website}
                   </a>
                 )}
               </div>

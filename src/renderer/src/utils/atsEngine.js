@@ -153,11 +153,11 @@ export function calculateATSScore(data) {
     feedback.suggestions.push('LinkedIn é verificado por recrutadores — inclua se possível')
   }
 
-  if (data.personal.github?.trim()) {
+  if (data.personal.website?.trim()) {
     score += 1
-    feedback.good.push('GitHub/portfólio presente')
+    feedback.good.push('Website/portfólio presente')
   } else {
-    feedback.suggestions.push('Inclua GitHub ou portfólio se for relevante para a área')
+    feedback.suggestions.push('Inclua seu website ou portfólio se for relevante para a área')
   }
 
   // Título profissional (5 pts)
