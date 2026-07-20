@@ -60,7 +60,7 @@ const StepCertifications = forwardRef(function StepCertifications({ data, onChan
       <h2>Certificações e Cursos</h2>
       <p className="step-desc">
         Adicione aqui cursos livres, bootcamps, treinamentos e certificações formais. Eles aumentam
-        a credibilidade no ATS.
+        a sua credibilidade.
       </p>
 
       {data.map((cert, i) => (
@@ -113,11 +113,11 @@ const StepCertifications = forwardRef(function StepCertifications({ data, onChan
               name="issuer"
               value={form.issuer}
               onChange={handle}
-              placeholder="Ex.: Amazon, Google, Alura, Udemy..."
+              placeholder="Ex.: Amazon, Alura, Udemy, SENAI..."
             />
           </div>
           <div className="form-group">
-            <label>Data</label>
+            <label>Emissão do certificado ou conclusão de curso</label>
             <input name="date" value={form.date} onChange={handle} placeholder="Jan 2024" />
           </div>
           <div className="form-group full">
