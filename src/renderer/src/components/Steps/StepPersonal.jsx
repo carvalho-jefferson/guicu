@@ -7,7 +7,7 @@ const FIELD_FILTERS = {
   email: (value) => value.replace(/\s/g, ''),
   phone: (value) => value.replace(/[^0-9+\-\s()]/g, ''),
   linkedin: (value) => value.replace(/\s/g, ''),
-  github: (value) => value.replace(/\s/g, '')
+  website: (value) => value.replace(/\s/g, '')
 }
 
 function StepPersonal({ data, onChange }) {

@@ -44,7 +44,7 @@ const STEPS = [
 ]
 
 const initialData = {
-  personal: { name: '', title: '', location: '', email: '', phone: '', linkedin: '', github: '' },
+  personal: { name: '', title: '', location: '', email: '', phone: '', linkedin: '', website: '' },
   summary: '',
   skills: [],
   experience: [],
