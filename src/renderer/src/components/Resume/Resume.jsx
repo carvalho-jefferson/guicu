@@ -249,8 +249,8 @@ function DesignPanel({ design, onChange }) {
           </label>
 
           <p className="design-panel-hint">
-            Essa personalização é apenas para deixar o documento mais bonito. Não se preocupe, seu
-            currículo continuará totalmente compatível com leitura por sistemas automatizados.
+            Estas personalizações são apenas para tornar o documento mais bonito. Não se preocupe,
+            seu currículo continuará totalmente compatível com leitura por sistemas automatizados.
           </p>
         </div>
       )}

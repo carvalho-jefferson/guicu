@@ -118,7 +118,7 @@ const StepSkills = forwardRef(function StepSkills({ data, onChange }, ref) {
           <label>
             Categoria e habilidades
             <FiHelpCircle
-              title="Evite listar habilidades que você não domina ou que não são relevantes para a vaga. Lembre-se que na entrevista técnica, os recrutadores podem perguntar sobre qualquer habilidade listada no seu currículo. Seja honesto e estratégico na escolha das habilidades para aumentar suas chances de sucesso!"
+              title="Evite listar habilidades que você não domina ou que não são relevantes para a vaga. Lembre-se que na entrevista técnica, os recrutadores podem perguntar sobre qualquer habilidade listada no seu currículo."
               style={{ marginLeft: 6, cursor: 'help', color: 'var(--muted)', fontSize: 14 }}
             />
           </label>

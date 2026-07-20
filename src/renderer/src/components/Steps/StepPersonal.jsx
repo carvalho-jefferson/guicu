@@ -81,12 +81,12 @@ function StepPersonal({ data, onChange }) {
           />
         </div>
         <div className="form-group">
-          <label>GitHub / Portfólio</label>
+          <label>Site / Portfólio</label>
           <input
-            name="github"
-            value={data.github}
+            name="website"
+            value={data.website}
             onChange={handle}
-            placeholder="github.com/seuusuario"
+            placeholder="seusiteaqui.com"
           />
         </div>
       </div>
