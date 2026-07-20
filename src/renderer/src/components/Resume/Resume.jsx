@@ -143,6 +143,7 @@ function isGithubUrl(url) {
 
 function DesignPanel({ design, onChange }) {
   const [open, setOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState(null) // chave da seção aberta
   const panelRef = useRef(null)
 
   useEffect(() => {
@@ -155,6 +156,10 @@ function DesignPanel({ design, onChange }) {
   }, [open])
 
   const set = (key, value) => onChange({ ...design, [key]: value })
+
+  const toggleSection = (section) => {
+    setActiveSection(activeSection === section ? null : section)
+  }
 
   return (
     <div className="design-panel-wrap" ref={panelRef}>
@@ -169,85 +174,223 @@ function DesignPanel({ design, onChange }) {
 
       {open && (
         <div className="design-panel">
+          {/* Cor de destaque */}
           <div className="design-row">
-            <label>Cor de destaque</label>
-            <input
-              type="color"
-              value={design.accentColor}
-              onChange={(e) => set('accentColor', e.target.value)}
-            />
-            <div className="design-accent-presets">
-              {ACCENT_PRESETS.map((p) => (
-                <button
-                  key={p.value}
-                  type="button"
-                  className={`design-accent-dot${design.accentColor === p.value ? ' active' : ''}`}
-                  style={{ background: p.value }}
-                  title={p.label}
-                  onClick={() => set('accentColor', p.value)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="design-row">
-            <label>Alinhamento do cabeçalho</label>
-            <select value={design.headerAlign} onChange={(e) => set('headerAlign', e.target.value)}>
-              {HEADER_ALIGN_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="design-row">
-            <label>Peso do nome/cabeçalho</label>
-            <select
-              value={design.headerWeight}
-              onChange={(e) => set('headerWeight', e.target.value)}
+            <label
+              onClick={() => toggleSection('accent')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
             >
-              {HEADER_WEIGHT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              <span>Cor de destaque</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'accent' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'accent' && (
+              <>
+                <input
+                  type="color"
+                  value={design.accentColor}
+                  onChange={(e) => set('accentColor', e.target.value)}
+                />
+                <div className="design-accent-presets">
+                  {ACCENT_PRESETS.map((p) => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      className={`design-accent-dot${design.accentColor === p.value ? ' active' : ''}`}
+                      style={{ background: p.value }}
+                      title={p.label}
+                      onClick={() => set('accentColor', p.value)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
+          {/* Alinhamento do cabeçalho */}
           <div className="design-row">
-            <label>Espaçamento entre seções</label>
-            <select value={design.spacing} onChange={(e) => set('spacing', e.target.value)}>
-              {SPACING_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+            <label
+              onClick={() => toggleSection('align')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>Alinhamento do cabeçalho</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'align' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'align' && (
+              <select
+                value={design.headerAlign}
+                onChange={(e) => set('headerAlign', e.target.value)}
+              >
+                {HEADER_ALIGN_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
+          {/* Peso do nome/cabeçalho */}
           <div className="design-row">
-            <label>Linha divisória dos títulos</label>
-            <select value={design.divider} onChange={(e) => set('divider', e.target.value)}>
-              {DIVIDER_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+            <label
+              onClick={() => toggleSection('weight')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>Peso do nome</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'weight' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'weight' && (
+              <select
+                value={design.headerWeight}
+                onChange={(e) => set('headerWeight', e.target.value)}
+              >
+                {HEADER_WEIGHT_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
+          {/* Espaçamento entre seções */}
           <div className="design-row">
-            <label>Margem lateral</label>
-            <select value={design.pageMargin} onChange={(e) => set('pageMargin', e.target.value)}>
-              {PAGE_MARGIN_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+            <label
+              onClick={() => toggleSection('spacing')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>Espaçamento entre seções</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'spacing' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'spacing' && (
+              <select value={design.spacing} onChange={(e) => set('spacing', e.target.value)}>
+                {SPACING_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
+          {/* Linha divisória dos títulos */}
+          <div className="design-row">
+            <label
+              onClick={() => toggleSection('divider')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>Linha divisória</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'divider' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'divider' && (
+              <select value={design.divider} onChange={(e) => set('divider', e.target.value)}>
+                {DIVIDER_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          {/* Margem lateral */}
+          <div className="design-row">
+            <label
+              onClick={() => toggleSection('margin')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>Margem lateral</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  transform: activeSection === 'margin' ? 'rotate(90deg)' : 'none',
+                  transition: '0.2s'
+                }}
+              >
+                ›
+              </span>
+            </label>
+            {activeSection === 'margin' && (
+              <select value={design.pageMargin} onChange={(e) => set('pageMargin', e.target.value)}>
+                {PAGE_MARGIN_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          {/* Ícones ao lado do contato */}
           <label className="design-checkbox-row">
             <input
               type="checkbox"
