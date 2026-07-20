@@ -7,6 +7,7 @@ import {
   HEADER_WEIGHT_OPTIONS,
   SPACING_OPTIONS,
   DIVIDER_OPTIONS,
+  DEFAULT_DESIGN,
   sanitizeDesign,
   designToCSSVars
 } from '../../utils/designTokens'
@@ -28,7 +29,8 @@ import {
   FiMail,
   FiGithub,
   FiGlobe,
-  FiChevronDown
+  FiChevronDown,
+  FiRefreshCw
 } from 'react-icons/fi'
 
 const CEFR_LABELS = {
@@ -337,6 +339,15 @@ function Resume({ resumeData, onBack, onUpdate }) {
     setDesign(sanitized)
     onUpdate?.('design', sanitized)
   }
+
+  const resetToDefaults = () => {
+    setSelectedFont('Calibri')
+    onUpdate?.('font', 'Calibri')
+    updateDesign(DEFAULT_DESIGN)
+    setSectionTitles(getSectionTitles())
+    onUpdate?.('sectionTitles', getSectionTitles())
+  }
+
   const designVars = useMemo(() => designToCSSVars(design), [design])
 
   // Títulos de seção editáveis
@@ -350,6 +361,7 @@ function Resume({ resumeData, onBack, onUpdate }) {
   }
   const { score, feedback } = useMemo(() => calculateATSScore(resumeData), [resumeData])
   const [goodExpanded, setGoodExpanded] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false)
   const band = useMemo(() => getScoreBand(score), [score])
 
   const handleMinimize = () => window.resumeAPI.minimizeWindow()
@@ -781,6 +793,14 @@ function Resume({ resumeData, onBack, onUpdate }) {
             />
           </div>
           <DesignPanel design={design} onChange={updateDesign} />
+          <button
+            className="design-trigger"
+            onClick={() => setShowResetModal(true)}
+            title="Restaurar modelo padrão"
+            style={{ padding: '7px 10px' }}
+          >
+            <FiRefreshCw size={16} />
+          </button>
           <div className="export-buttons">
             <button className="btn-export" onClick={exportPDF}>
               <FiDownload /> Exportar PDF
@@ -1248,6 +1268,37 @@ function Resume({ resumeData, onBack, onUpdate }) {
           100% { transform: scale(1);    opacity: 0;    }
         }
       `}</style>
+      {/* Modal de confirmação – restaurar modelo padrão */}
+      {showResetModal && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: 400 }}>
+            <h2 style={{ marginTop: 0, color: 'var(--primary)' }}>Restaurar modelo padrão</h2>
+            <p style={{ marginBottom: 24 }}>
+              Todas as personalizações serão revertidas para o padrão do Guicu. Seus dados já
+              preenchidos não serão afetados, com exceção dos títulos das seções.
+            </p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setShowResetModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn-primary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  resetToDefaults()
+                  setShowResetModal(false)
+                }}
+              >
+                Restaurar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
