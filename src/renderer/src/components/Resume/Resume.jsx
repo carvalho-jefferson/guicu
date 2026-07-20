@@ -382,6 +382,8 @@ function Resume({ resumeData, onBack, onUpdate }) {
 
   const exportPDF = async () => {
     document.activeElement?.blur()
+    // Dá tempo ao React para atualizar o estado (enviar o título editável)
+    await new Promise((resolve) => setTimeout(resolve, 50))
     const result = await window.resumeAPI.exportPDF(resumeData)
     if (!result.success && result.error !== 'Salvamento cancelado')
       alert('Erro ao exportar PDF: ' + result.error)
