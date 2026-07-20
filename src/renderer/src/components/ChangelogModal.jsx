@@ -26,6 +26,19 @@ const CHANGELOG = {
       'Aparência dos subtítulos melhorada — removido o negrito pesado, tornando o visual mais moderno',
       'Renomeada a penúltima seção para "Certificações e Cursos"'
     ]
+  },
+  '1.7.0': {
+    title: 'Novidades da versão 1.7.0 ✨',
+    items: [
+      'Nova funcionalidade: modelos pré-preenchidos para te ajudar. Basta clicar em "Guicu, me ajuda!"',
+      'Nova função que restaura o currículo para o modelo padrão',
+      'Modificados alguns textos da interface para melhor compreensão',
+      'Nova aparência da função de personalização do currículo — mais compacta e intuitiva',
+      'Nova personalização: ajuste de margem do currículo (normal ou estreita)',
+      'Corrigida a aparência da barra vertical "|" que estava desalinhada no currículo',
+      'Corrigido o comportamento ao avançar etapas — agora você é redirecionado para o topo da próxima seção',
+      'Correção de bugs e melhorias gerais'
+    ]
   }
 }
 
