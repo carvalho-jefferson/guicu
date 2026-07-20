@@ -59,10 +59,10 @@ const StepEducation = forwardRef(function StepEducation({ data, onChange }, ref)
       <h2>Formação Acadêmica</h2>
       <p className="step-desc">
         Use esta seção apenas para graduação, ensino médio, curso técnico formal ou pós‑graduação.
-        <span style={{ color: '#ba721aca' }}>
+        <span style={{ color: '#ba721aca', fontSize: 13, fontStyle: 'italic' }}>
           {' '}
-          Atenção: cursos livres, bootcamps e treinamentos devem ser adicionados na etapa
-          &quot;Cursos e Certificações&quot;.
+          (Atenção: cursos livres, bootcamps e treinamentos devem ser adicionados na etapa
+          &quot;Certificações e Cursos&quot;).
         </span>
       </p>
 

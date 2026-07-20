@@ -1,5 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import { FiEdit2, FiX } from 'react-icons/fi'
+import { projectBulletTemplates } from '../../content/templates'
 
 const empty = { name: '', tech: '', link: '', bullets: [], linkDisplay: 'below' }
 
@@ -74,6 +75,18 @@ const StepProjects = forwardRef(function StepProjects({ data, onChange }, ref) {
 
   const remove = (i) => onChange(data.filter((_, idx) => idx !== i))
   const cancel = () => resetForm()
+
+  // Modelos de preenchimento
+  const [bulletTemplateIndex, setBulletTemplateIndex] = useState(0)
+
+  const handleHelp = () => {
+    const nextIndex = (bulletTemplateIndex + 1) % projectBulletTemplates.length
+    setBulletTemplateIndex(nextIndex)
+    setForm((prev) => ({
+      ...prev,
+      bullets: [...(prev.bullets || []), projectBulletTemplates[nextIndex]]
+    }))
+  }
 
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () =>
@@ -210,6 +223,17 @@ const StepProjects = forwardRef(function StepProjects({ data, onChange }, ref) {
                 )}
               </div>
             )}
+            {/* Botão "Guicu, me ajuda!" */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+              <button
+                type="button"
+                className="help-pill"
+                onClick={handleHelp}
+                title="Preencher com um modelo de projeto (clique novamente para outra sugestão)"
+              >
+                Guicu, me ajuda!
+              </button>
+            </div>
           </div>
           <div className="form-group full">
             <label>Link (GitHub, deploy, etc)</label>

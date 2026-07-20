@@ -1,7 +1,13 @@
+import { useState } from 'react'
+import { summaryTemplates } from '../../content/templates'
+
 function StepSummary({ data, onChange }) {
+  const trimmed = data.trim()
+  const wordCount = trimmed === '' ? 0 : trimmed.split(/\s+/).filter(Boolean).length
   const MAX_WORDS = 80
-  const wordCount = data.trim() === '' ? 0 : data.trim().split(/\s+/).filter(Boolean).length
   const isAtLimit = wordCount === MAX_WORDS
+
+  const [templateIndex, setTemplateIndex] = useState(0)
 
   const handleChange = (e) => {
     const newValue = e.target.value
@@ -10,6 +16,12 @@ function StepSummary({ data, onChange }) {
     if (newWordCount <= MAX_WORDS) {
       onChange(newValue)
     }
+  }
+
+  const handleHelp = () => {
+    const nextIndex = (templateIndex + 1) % summaryTemplates.length
+    setTemplateIndex(nextIndex)
+    onChange(summaryTemplates[nextIndex])
   }
 
   return (
@@ -30,6 +42,19 @@ function StepSummary({ data, onChange }) {
           }
           rows={6}
         />
+
+        {/* Botão "Guicu, me ajuda!" */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+          <button
+            type="button"
+            className="help-pill"
+            onClick={handleHelp}
+            title="Preencher com um modelo de resumo (clique novamente para outra sugestão)"
+          >
+            Guicu, me ajuda!
+          </button>
+        </div>
+
         <span className={`word-count ${isAtLimit ? 'good' : wordCount < 40 ? 'warn' : 'good'}`}>
           {isAtLimit
             ? `${wordCount}/${MAX_WORDS} palavras — limite atingido`
@@ -41,4 +66,5 @@ function StepSummary({ data, onChange }) {
     </div>
   )
 }
+
 export default StepSummary
