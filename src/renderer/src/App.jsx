@@ -75,6 +75,7 @@ function App() {
     // Executado apenas uma vez, na montagem do componente
     return !localStorage.getItem('guicu-onboarding')
   })
+  const wizardContentRef = useRef(null)
 
   const [showChangelog, setShowChangelog] = useState(() => {
     // Só exibe changelog para quem já conhece o app (já fechou o onboarding).
@@ -145,6 +146,12 @@ function App() {
       setLoaded(true)
     }
   }, [activeResumeId])
+
+  useEffect(() => {
+    if (wizardContentRef.current) {
+      wizardContentRef.current.scrollTop = 0
+    }
+  }, [step])
 
   // Carrega os dados do currículo ativo
   useEffect(() => {
@@ -598,7 +605,7 @@ function App() {
               <FiSettings size={18} />
             </button>
           </aside>
-          <div className="wizard-content">
+          <div className="wizard-content" ref={wizardContentRef}>
             <div className="wizard-card">
               {steps[step]}
 
