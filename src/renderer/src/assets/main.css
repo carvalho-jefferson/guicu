@@ -1180,7 +1180,7 @@ textarea {
   background: white;
   color: #222;
   width: 210mm;
-  padding: 12mm 15mm;
+  padding: var(--r-page-margin, 18mm) var(--r-page-margin, 18mm);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
   font-family: Arial, Calibri, sans-serif;
   font-size: 11pt !important;

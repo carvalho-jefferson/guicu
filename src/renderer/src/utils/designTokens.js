@@ -6,7 +6,8 @@ export const DEFAULT_DESIGN = {
   headerWeight: 'bold', // guardrail: 'normal' | 'bold'
   spacing: 'normal', // guardrail: 'compact' | 'normal'
   divider: 'line', // guardrail: 'line' | 'none'
-  showIcons: false // ícones decorativos ao lado do contato (desligado por padrão)
+  showIcons: false, // ícones decorativos ao lado do contato (desligado por padrão)
+  pageMargin: 'normal'
 }
 
 // Atalho visual de paleta de cores de destaque
@@ -48,6 +49,11 @@ const WEIGHT_SCALE = {
   normal: '400',
   bold: '700'
 }
+
+export const PAGE_MARGIN_OPTIONS = [
+  { label: 'Normal (18mm)', value: 'normal' },
+  { label: 'Estreita (12mm)', value: 'narrow' }
+]
 
 // Trava de legibilidade da cor de destaque
 // Sem essa trava, o usuário poderia escolher um tom claro demais que ficaria ilegível pra um ser humano. Usa a fórmula de contraste do WCAG 2.1 e escurece a cor (mantendo o matiz) até atingir pelo menos a razão de contraste recomendada para texto pequeno (4.5:1) contra fundo branco.
@@ -159,15 +165,19 @@ export function ensureReadableAccent(hex) {
 
 export function sanitizeDesign(design) {
   const d = { ...DEFAULT_DESIGN, ...(design || {}) }
+
   if (!HEADER_ALIGN_OPTIONS.some((o) => o.value === d.headerAlign)) d.headerAlign = 'left'
   if (!HEADER_WEIGHT_OPTIONS.some((o) => o.value === d.headerWeight)) d.headerWeight = 'bold'
   if (!SPACING_OPTIONS.some((o) => o.value === d.spacing)) d.spacing = 'normal'
   if (!DIVIDER_OPTIONS.some((o) => o.value === d.divider)) d.divider = 'line'
+  if (!PAGE_MARGIN_OPTIONS.some((o) => o.value === d.pageMargin)) d.pageMargin = 'normal'
+
   if (typeof d.accentColor !== 'string' || !/^#[0-9a-fA-F]{3,8}$/.test(d.accentColor.trim())) {
     d.accentColor = DEFAULT_DESIGN.accentColor
   } else {
     d.accentColor = ensureReadableAccent(d.accentColor.trim())
   }
+
   d.showIcons = Boolean(d.showIcons)
   return d
 }
@@ -184,6 +194,7 @@ export function designToCSSVars(design) {
     '--r-section-gap': scale.section,
     '--r-item-gap': scale.item,
     '--r-line-height': scale.lineHeight,
-    '--r-divider-width': d.divider === 'none' ? '0px' : '1px'
+    '--r-divider-width': d.divider === 'none' ? '0px' : '1px',
+    '--r-page-margin': d.pageMargin === 'narrow' ? '12mm' : '18mm'
   }
 }

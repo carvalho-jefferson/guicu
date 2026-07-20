@@ -8,6 +8,7 @@ import {
   SPACING_OPTIONS,
   DIVIDER_OPTIONS,
   DEFAULT_DESIGN,
+  PAGE_MARGIN_OPTIONS,
   sanitizeDesign,
   designToCSSVars
 } from '../../utils/designTokens'
@@ -229,6 +230,17 @@ function DesignPanel({ design, onChange }) {
             <label>Linha divisória dos títulos</label>
             <select value={design.divider} onChange={(e) => set('divider', e.target.value)}>
               {DIVIDER_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="design-row">
+            <label>Margem lateral</label>
+            <select value={design.pageMargin} onChange={(e) => set('pageMargin', e.target.value)}>
+              {PAGE_MARGIN_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
                   {o.label}
                 </option>
@@ -1299,6 +1311,12 @@ function Resume({ resumeData, onBack, onUpdate }) {
           </div>
         </div>
       )}
+      {/* Estilo dinâmico para ajustar a margem da página na exportação PDF */}
+      <style>{`
+        @page {
+          margin: ${design.pageMargin === 'narrow' ? '12mm' : '18mm'} ${design.pageMargin === 'narrow' ? '12mm' : '18mm'};
+        }
+      `}</style>
     </div>
   )
 }
