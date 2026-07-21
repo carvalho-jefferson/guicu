@@ -51,8 +51,8 @@ This project prioritizes what actually gets you past the first filter: keyword d
 ## Screenshots
 
 <p align="center">
-  <img src="assets/etapa-experiencia.png" width="48%" alt="Shows the program screen at the Work Experience step">
-  <img src="assets/pre-visualizacao-e-analise.png" width="48%" alt="Shows the program screen where the user can preview the resume, edit its appearance, and get suggested corrections">
+  <img src="assets/1.png" width="48%" alt="Shows the program screen at the Work Experience step">
+  <img src="assets/2.png" width="48%" alt="Shows the program screen where the user can preview the resume, edit its appearance, and get suggested corrections">
 </p>
 
 ## ATS Optimization

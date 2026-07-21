@@ -51,8 +51,8 @@ Este projeto prioriza o que de fato te faz passar pelo primeiro filtro: densidad
 ## Capturas de tela
 
 <p align="center">
-  <img src="assets/etapa-experiencia.png" width="48%" alt="Exibe a tela do programa na etapa Experiência Profissional">
-  <img src="assets/pre-visualizacao-e-analise.png" width="48%" alt="Exibe a tela do programa onde o usuário consegue pré-visualizar o currículo, editar a aparência e ter sugestões de correções">
+  <img src="assets/1.png" width="48%" alt="Exibe a tela do programa na etapa Experiência Profissional">
+  <img src="assets/2.png" width="48%" alt="Exibe a tela do programa onde o usuário consegue pré-visualizar o currículo, editar a aparência e ter sugestões de correções">
 </p>
 
 ## Otimização ATS
