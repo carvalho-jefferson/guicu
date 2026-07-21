@@ -200,7 +200,7 @@ ipcMain.handle('create-resume', async () => {
         email: '',
         phone: '',
         linkedin: '',
-        github: ''
+        website: ''
       },
       summary: '',
       skills: [],
